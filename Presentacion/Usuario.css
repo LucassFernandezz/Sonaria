@@ -1,0 +1,259 @@
+/* --- General --- */
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: #ffe0b3; /* Fondo de color uniforme del Login */
+    font-family: "Segoe UI", sans-serif;
+    display: flex;
+    flex-direction: column;
+    color: #3b2c38;
+}
+
+/* ======================================================
+ * HEADER (ESTILO UNIFICADO DE LOGIN/REGISTRO)
+ * ====================================================== */
+.header-con-busqueda {
+    background-color: #f8c8d0;
+    border: 2px solid #ff69b4; /* Borde rosa fuerte */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    width: 98.5%;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.logo-img {
+    height: 35px;
+    width: auto;
+}
+
+.logo .nombre {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: black;
+}
+
+.barra-central {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.barra-central input {
+    /* Estilo del input de búsqueda unificado */
+    width: 150px;
+    border: 2px solid #ff69b4;
+    border-radius: 5px;
+    padding: 4px 6px;
+    background-color: #fff4e6;
+}
+
+.filtro-texto {
+    font-weight: bold;
+    color: black;
+}
+
+.iconos-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.iconos-header span {
+    font-size: 1.4em;
+    background-color: white;
+    border: 1px solid #ff69b4;
+    border-radius: 50%;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.iconos-header a {
+    font-size: 1.4em;
+    background-color: white;
+    border: 1px solid #ff69b4;
+    border-radius: 50%;
+    padding: 4px;
+    cursor: pointer;
+}
+
+/* Estilo específico para el ícono de perfil que contiene la imagen */
+.perfil-icono {
+    padding: 0;
+    border: none !important;
+    background: none !important;
+}
+
+.perfil-icono img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    /* Borde rosa para el perfil */
+    border: 2px solid #ff69b4; 
+    display: block;
+}
+
+/* Eliminar estilos obsoletos de la barra superior anterior */
+header button {
+    /* Eliminamos estilos de botones directos para usar .iconos-header span */
+    display: none; 
+}
+
+/* El resto de estilos para el contenido se mantiene igual */
+
+/* --- Zona principal --- */
+/* Barra con usuario, descarga y textos alineados como en la imagen */
+.datos {
+    display: flex;
+    align-items: center;       /* centra verticalmente todos los elementos */
+    justify-content: flex-start;/* mantiene elementos a la izquierda */
+    gap: 24px;                 /* espacio entre left-group y meta */
+    padding: 10px 16px;
+    background: transparent;   /* si querés fondo, cámbialo */
+}
+
+/* grupo izquierdo: foto + botón de descarga */
+.left-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* foto pequeña con borde circular naranja */
+.perfil-peque {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #f4a261; /* borde naranja claro similar a la imagen */
+    box-shadow: 0 1px 0 rgba(0,0,0,0.08);
+}
+
+/* botón de descarga circular con fondo blanco y borde naranja */
+.descarga-circular {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #f4a261;
+    text-decoration: none;
+    font-size: 20px;
+    color: #333;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* bloque de metadatos: mantiene los dos textos en la misma línea */
+.meta {
+    display: flex;
+    align-items: center;
+    gap: 36px;                 /* espacio entre "Publicado" y "Solicitud" */
+}
+
+/* estilo de los textos (grandes como en la imagen) */
+.meta .publicado,
+.meta .solicitud {
+    font-size: 22px;           /* ajustar según lo veas necesario */
+    color: #0e0e0e;
+    margin: 0;
+    line-height: 1;
+}
+
+/* si la pantalla es muy chica, que se reduzca ligeramente */
+@media (max-width: 480px) {
+    .perfil-peque { width: 40px; height: 40px; border-width: 2px; }
+    .descarga-circular { width: 40px; height: 40px; font-size: 18px; border-width: 2px; }
+    .meta .publicado, .meta .solicitud { font-size: 18px; gap: 18px; }
+}
+
+
+/* --- Publicación --- */
+.datos {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+/* ESTILOS OBSOLETOS DE LA BARRA SUPERIOR ANTERIOR ELIMINADOS O ANULADOS */
+
+/* --- Descripción --- */
+.descripcion {
+    background-color: #f6b9c5;
+    border: 1px solid #d77da6;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    font-size: 15px;
+}
+
+/* --- Reproductor --- */
+.reproductor {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #2d022b;
+    border-radius: 40px;
+    padding: 8px 15px;
+    margin-top: 15px;
+    height: 45px;
+}
+
+.play-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.barra {
+    flex-grow: 1;
+    appearance: none;
+    height: 10px;
+    background: #4a0056;
+    border-radius: 10px;
+    outline: none;
+    margin: 0 10px;
+}
+
+.barra::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #c04cff;
+    cursor: pointer;
+}
+
+
+.duracion {
+    color: white;
+    font-size: 13px;
+    width: 80px;
+    text-align: right;
+}
+/* Hace que el logo completo (imagen + texto) sea clickeable */
+.logo-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.logo-link:hover .nombre {
+    color: #ff69b4; /* cambia a rosa al pasar el mouse */
+    transition: color 0.2s ease;
+    cursor: pointer;
+}

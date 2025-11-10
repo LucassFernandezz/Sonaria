@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subida - Sonaría</title>
+  <link rel="stylesheet" href="subida.css">
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header-con-busqueda">
+      <a href="musicas.html" class="logo-link">
+          <div class="logo">
+              <img src="logo.png" alt="Logo Sonaría" class="logo-img">
+              <span class="nombre">Sonaría</span>
+          </div>
+      </a>
+
+      <div class="barra-central">
+          <input type="text" placeholder="🔍">
+          <span class="filtro-texto">Filtro</span>
+          <div class="iconos-header">
+              <span>⬆️</span>
+              <a href="Configuracion.html" class="icono-link">⚙️</a>
+              <span>👤</span>
+          </div>
+      </div>
+
+      <nav>
+          <a href="login.html" class="btn-inicio-sesion">Iniciar sesión</a>
+      </nav>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="subida-container">
+    <form id="uploadForm" class="subida-form" onsubmit="return false;">
+      <label for="archivo" class="zona-arrastre" id="zonaArrastre">
+        <span class="icono-subida">⬆️</span>
+        <p class="texto-subida">Arrastra o selecciona tu archivo aquí</p>
+        <input type="file" id="archivo" accept="audio/*,video/*,image/*" hidden>
+
+        <!-- Vista previa dentro del cuadro -->
+        <div id="preview" class="preview"></div>
+      </label>
+
+      <input type="text" class="campo texto" placeholder="Descripción">
+      <input type="text" class="campo texto" placeholder="Petición/es">
+
+      <button class="btn-subir" id="btnSubir">Subir</button>
+    </form>
+  </main>
+
+  <script>
+    const archivoInput = document.getElementById("archivo");
+    const zonaArrastre = document.getElementById("zonaArrastre");
+    const preview = document.getElementById("preview");
+    const textoSubida = document.querySelector(".texto-subida");
+    const iconoSubida = document.querySelector(".icono-subida");
+
+    zonaArrastre.addEventListener("click", () => archivoInput.click());
+
+    zonaArrastre.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      zonaArrastre.classList.add("hover");
+    });
+
+    zonaArrastre.addEventListener("dragleave", () => {
+      zonaArrastre.classList.remove("hover");
+    });
+
+    zonaArrastre.addEventListener("drop", (e) => {
+      e.preventDefault();
+      zonaArrastre.classList.remove("hover");
+      archivoInput.files = e.dataTransfer.files;
+      mostrarPreview(e.dataTransfer.files[0]);
+    });
+
+    archivoInput.addEventListener("change", (e) => {
+      mostrarPreview(e.target.files[0]);
+    });
+
+    function mostrarPreview(file) {
+      preview.innerHTML = "";
+
+      if (!file) return;
+
+      // Ocultar el texto e ícono cuando hay vista previa
+      textoSubida.style.display = "none";
+      iconoSubida.style.display = "none";
+
+      const tipo = file.type;
+
+      let elemento;
+      if (tipo.startsWith("image/")) {
+        elemento = document.createElement("img");
+      } else if (tipo.startsWith("audio/")) {
+        elemento = document.createElement("audio");
+        elemento.controls = true;
+      } else if (tipo.startsWith("video/")) {
+        elemento = document.createElement("video");
+        elemento.controls = true;
+      } else {
+        preview.textContent = "Archivo no compatible para vista previa.";
+        return;
+      }
+
+      elemento.src = URL.createObjectURL(file);
+      elemento.classList.add("preview-media");
+      preview.appendChild(elemento);
+    }
+  </script>
+</body>
+</html>

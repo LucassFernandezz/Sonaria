@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sonaría - Proyecto</title>
+  <link rel="stylesheet" href="Usuario.css">
+</head>
+<body>
+
+  <header class="header-con-busqueda">
+    <a href="musicas.html" class="logo-link">
+      <div class="logo">
+        <img src="logo.png" alt="Logo Sonaría" class="logo-img">
+        <span class="nombre">Sonaría</span>
+      </div>
+  </a>
+
+
+    <div class="barra-central">
+      <input type="text" placeholder="🔍"> 
+      <span class="filtro-texto">Filtro</span>
+      <div class="iconos-header">
+        <span>⬆️</span>
+        <a href="Configuracion.html" class="icono-link">⚙️</a>
+        <span class="perfil-icono">
+            <img src="Imagenes/DarkTroll7.png" alt="Perfil">
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <div class="datos">
+      <div class="left-group">
+        <img class="perfil-peque" src="Imagenes/DarkTroll3.png" alt="perfil">
+        <a href="audio/Nightcore _ Sweet Little Bumblebee (lyric video)(MP3_128K).mp3" download class="descarga-circular" title="Descargar audio" aria-label="Descargar audio">
+          ⬇️
+        </a>
+      </div>
+
+      <div class="meta">
+        <span class="publicado">Publicado: <b>07-10-2025</b></span>
+        <span class="solicitud">Solicitud en: <b>Voz y Baterias</b></span>
+      </div>
+    </div>
+
+    <div class="descripcion">
+      🎶 Base instrumental de piano y percusión.   
+      Busco colaboración vocal con estilo libre.
+    </div>
+
+    <div class="reproductor">
+      <button class="play-btn" id="playPause">▶️</button>
+      <input type="range" id="barra" class="barra" min="0" value="0" step="1">
+      <div class="duracion" id="duracion">00:00 / 02:05</div>
+      <audio id="audio" src="audio/Nightcore _ Sweet Little Bumblebee (lyric video)(MP3_128K).mp3"></audio>
+    </div>
+  </main>
+
+  <script>
+    const audio = document.getElementById("audio");
+    const playPause = document.getElementById("playPause");
+    const barra = document.getElementById("barra");
+    const duracion = document.getElementById("duracion");
+
+    playPause.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play();
+        playPause.textContent = "⏸️";
+      } else {
+        audio.pause();
+        playPause.textContent = "▶️";
+      }
+    });
+
+    // Actualiza la barra mientras se reproduce
+    audio.addEventListener("timeupdate", () => {
+      barra.value = audio.currentTime;
+      const min = Math.floor(audio.currentTime / 60);
+      const seg = Math.floor(audio.currentTime % 60).toString().padStart(2, "0");
+      const durMin = Math.floor(audio.duration / 60);
+      const durSeg = Math.floor(audio.duration % 60).toString().padStart(2, "0");
+      if (!isNaN(durMin)) {
+        duracion.textContent = `${min}:${seg} / ${durMin}:${durSeg}`;
+      }
+    });
+
+    // Configura el máximo del range al cargar los metadatos
+    audio.addEventListener("loadedmetadata", () => {
+      barra.max = audio.duration;
+    });
+
+    // Permite cambiar la posición del audio
+    barra.addEventListener("input", () => {
+      audio.currentTime = barra.value;
+    });
+  </script>
+
+</body>
+</html>

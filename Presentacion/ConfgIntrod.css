@@ -1,0 +1,245 @@
+/* ===================================================================
+ * ESTILO GLOBAL
+ * =================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #ffe0b3; /* Fondo beige/anaranjado */
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center;
+}
+
+main {
+    text-align: center;
+    padding: 20px;
+    flex: 1;
+    width: 100%;
+}
+
+/* ===================================================================
+ * HEADER (igual al de las imágenes)
+ * =================================================================== */
+.header-con-busqueda {
+    background-color: #f8c8d0; /* Rosa claro */
+    border: 2px solid #ff69b4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.logo-img {
+    height: 35px;
+    width: auto;
+}
+
+.logo .nombre {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: black;
+}
+
+.barra-central {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.barra-central input {
+    width: 150px;
+    border: 2px solid #ff69b4;
+    border-radius: 5px;
+    padding: 4px 6px;
+    background-color: #fff4e6;
+}
+
+.filtro-texto {
+    font-weight: bold;
+    color: black;
+}
+
+.iconos-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.iconos-header span {
+    font-size: 1.4em;
+    background-color: white;
+    border: 1px solid #ff69b4;
+    border-radius: 50%;
+    padding: 4px;
+}
+
+/* Enlace del icono ⚙️ que lleva a Configuración */
+.iconos-header .icono-link {
+    font-size: 1.4em;
+    background-color: white;
+    border: 1px solid #ff69b4;
+    border-radius: 50%;
+    padding: 4px;
+    text-decoration: none;
+    color: black;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.iconos-header .icono-link:hover {
+    background-color: #ffe6f0;
+    cursor: pointer;
+}
+
+/* ===================================================================
+ * BOTÓN INICIAR SESIÓN
+ * =================================================================== */
+.btn-inicio-sesion {
+    background-color: #ffc885;
+    border: 2px solid #ff69b4;
+    color: black;
+    padding: 5px 12px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.btn-inicio-sesion:hover {
+    background-color: #ffb366;
+}
+
+/* ===================================================================
+ * BOTONES PRINCIPALES
+ * =================================================================== */
+.btn-accion {
+    background-color: #ffc885;
+    border: 2px solid #ff69b4;
+    color: black;
+    font-weight: bold;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 6px;
+    display: inline-block;
+    margin: 10px;
+    transition: background-color 0.2s;
+}
+
+.btn-accion:hover {
+    background-color: #ffb366;
+}
+
+/* ===================================================================
+ * PÁGINA DE INTRODUCCIÓN (texto más grande)
+ * =================================================================== */
+.introduccion-contenido {
+    font-size: 1.5em;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.introduccion-contenido .intro-texto {
+    font-size: 1.8em;
+    margin-bottom: 30px;
+    line-height: 1.4;
+}
+
+.introduccion-contenido .btn-empezar {
+    font-size: 1.5em;
+    padding: 14px 50px;
+}
+
+.introduccion-contenido .terminos-texto {
+    font-size: 1.3em;
+    line-height: 1.5;
+    margin-top: 40px;
+}
+
+/* ===================================================================
+ * PÁGINA DE CONFIGURACIÓN (botones en cuadrado)
+ * =================================================================== */
+.configuracion-page {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.grid-botones {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 25px;
+    justify-content: center;
+    align-items: center;
+    max-width: 500px;
+    margin: 0 auto;
+    margin-top: 40px;
+}
+
+.grid-botones .btn-accion {
+    background-color: #ffc885;
+    border: 2px solid #ff69b4;
+    color: black;
+    font-weight: bold;
+    padding: 20px 0;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 1.2em;
+    transition: background-color 0.2s;
+    width: 100%;
+}
+
+.grid-botones .btn-accion:hover {
+    background-color: #ffb366;
+}
+
+/* ===================================================================
+ * TÍTULOS Y TEXTO
+ * =================================================================== */
+h1 {
+    font-size: 2.5em;
+    margin: 30px 0;
+}
+
+/* ===================================================================
+ * FOOTER (fijo al fondo)
+ * =================================================================== */
+footer {
+    background-color: #ff69b4;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+    font-size: 0.9em;
+    position: relative;
+    bottom: 0;
+    margin-top: auto;
+}
+/* Hace que el logo completo (imagen + texto) sea clickeable */
+.logo-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.logo-link:hover .nombre {
+    color: #ff69b4; /* cambia a rosa al pasar el mouse */
+    transition: color 0.2s ease;
+    cursor: pointer;
+}

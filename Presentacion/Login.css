@@ -1,0 +1,195 @@
+/* ======================================================
+ * ESTILO GLOBAL
+ * ====================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #ffe0b3;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  align-items: center;
+}
+
+main {
+  text-align: center;
+  padding: 20px;
+  flex: 1;
+  width: 100%;
+}
+
+/* ======================================================
+ * HEADER
+ * ====================================================== */
+.header-con-busqueda {
+  background-color: #f8c8d0;
+  border: 2px solid #ff69b4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+  width: 100%;
+}
+
+.btn-inicio-sesion {
+    background-color: #ffc885;
+    border: 2px solid #ff69b4;
+    color: black;
+    font-weight: bold;
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.logo-img {
+  height: 35px;
+  width: auto;
+}
+
+.logo .nombre {
+  font-size: 1.8em;
+  font-weight: bold;
+  color: black;
+}
+
+.barra-central {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.barra-central input {
+  width: 150px;
+  border: 2px solid #ff69b4;
+  border-radius: 5px;
+  padding: 4px 6px;
+  background-color: #fff4e6;
+}
+
+.filtro-texto {
+  font-weight: bold;
+  color: black;
+}
+
+.iconos-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.iconos-header span {
+  font-size: 1.4em;
+  background-color: white;
+  border: 1px solid #ff69b4;
+  border-radius: 50%;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.iconos-header a {
+  font-size: 1.4em;
+  background-color: white;
+  border: 1px solid #ff69b4;
+  border-radius: 50%;
+  padding: 4px;
+  cursor: pointer;
+}
+
+/* ======================================================
+ * FORMULARIO DE LOGIN
+ * ====================================================== */
+h1 {
+  font-size: 2.5em;
+  margin: 30px 0 20px 0;
+}
+
+.form-login {
+  background-color: #ffd6a5;
+  border: 2px solid #ff69b4;
+  border-radius: 10px;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.form-login label {
+  font-weight: bold;
+  text-align: left;
+}
+
+.form-login input {
+  border: 2px solid #ff69b4;
+  border-radius: 5px;
+  padding: 8px;
+  font-size: 1em;
+  background-color: #fff4e6;
+}
+
+.btn-accion {
+  background-color: #ffc885;
+  border: 2px solid #ff69b4;
+  color: black;
+  font-weight: bold;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-accion:hover {
+  background-color: #ffb366;
+}
+
+.texto-registro {
+  margin-top: 10px;
+  font-size: 0.9em;
+}
+
+.texto-registro a {
+  color: #ff69b4;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* ======================================================
+ * FOOTER
+ * ====================================================== */
+footer {
+  background-color: #ff69b4;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  width: 100%;
+  font-size: 0.9em;
+  margin-top: auto;
+}
+/* Hace que el logo completo (imagen + texto) sea clickeable */
+.logo-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.logo-link:hover .nombre {
+    color: #ff69b4; /* cambia a rosa al pasar el mouse */
+    transition: color 0.2s ease;
+    cursor: pointer;
+}
