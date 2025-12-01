@@ -1,0 +1,197 @@
+/* =============
+ * ESTILO GLOBAL
+ * =============*/
+
+/* Reset y caja global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* BODY: fuente, fondo y layout general
+     - Aquí está cosas como: font-family Arial y fondo #ffe0b3 */
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #ffe0b3;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center; /* centrar contenido principal (puedes quitar si no quieres) */
+  }
+  
+  /* MAIN: contenedor de contenido */
+  main {
+    text-align: center;
+    padding: 20px;
+    flex: 1;
+    width: 100%;
+    max-width: 1200px; /* opcional: limita ancho para pantallas grandes */
+  }
+
+  h1 {
+    font-size: 2.5em;
+    margin: 30px 0 20px 0;
+  }
+  
+  /* ======================================================
+   * HEADER (reglas base que compartiste + ajustes visuales)
+   * ====================================================== */
+  
+  /* Clase original tuya: header-con-busqueda (la usamos) */
+  .header-con-busqueda {
+    background-color: #f8c8d0;
+    border: 2px solid #ff69b4;
+    display: flex;
+    align-items: center;
+    /* justify-content: space-between; lo controlamos con gap y margin-left:auto */
+    padding: 6px 10px;
+    width: 100%;
+    gap: 12px;
+    position: sticky; /* queda pegado arriba si scrolleas */
+    top: 0;
+    z-index: 100;
+  }
+  
+  /* Ajuste visual adicional para que el borde se parezca más a la imagen */
+  .header-bar {
+    border-bottom-width: 3px;
+  }
+  
+  /* =========================
+     LOGO / LINK A INICIO
+     ========================= */
+  /* Hace que el logo completo (imagen) sea clickeable */
+  .logo-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  /* Imagen del logo (ajustar tamaño) */
+  .logo-img {
+    height: 44px; /* tamaño equivalente a la imagen que mandaste */
+    width: auto;
+  }
+  
+  /* Efecto hover en el logo (según tu CSS) */
+  .logo-link:hover .logo-img {
+    opacity: 0.9;
+    cursor: pointer;
+  }
+  
+  /* =========================
+     BARRA DE BÚSQUEDA (centro)
+     ========================= */
+  .barra-central,
+  .search-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #fff4e6;
+    border: 2px solid #d6a24d; /* borde suave */
+    border-radius: 8px;
+    padding: 4px 6px;
+    box-shadow: inset 0 0 0 2px #f2e6d9; /* ligero interior */
+  }
+  
+  /* Input de búsqueda */
+  .barra-central input[type="text"],
+  .search-container input[type="text"] {
+    width: 220px; /* acorde a la imagen */
+    padding: 6px 8px;
+    border: 1px solid #d6a24d;
+    border-radius: 6px;
+    background-color: #fff4e6;
+    outline: none;
+    font-size: 15px;
+  }
+  
+  /* Botón de lupa dentro de la caja */
+  .search-icon-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .search-icon-btn img {
+    width: 22px;
+    height: 22px;
+    display: block;
+  }
+  
+  /* =========================
+     TEXTO "Filtro"
+     ========================= */
+  .filtro-texto {
+    font-weight: bold;
+    color: black;
+  }
+  
+  /* Ajustes extra para el texto de filtro grande como en la imagen */
+  .filtro-texto-header {
+    font-size: 26px;
+    font-weight: 700;
+    margin-left: 6px;
+  }
+  
+  /* =========================
+     ICONOS A LA DERECHA (botones)
+     ========================= */
+  .iconos-header,
+  .icon-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto; /* empuja los iconos hacia la derecha */
+  }
+  
+  /* Estilo común para botones circulares */
+  .icon-btn,
+  .profile-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: white;
+    border: 3px solid #ff69b4;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 4px;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.05);
+  }
+  
+  /* Imagen dentro de los botones */
+  .icon-btn img,
+  .profile-btn img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+    display: block;
+  }
+  
+  /* Hover / enfoque accesible */
+  .icon-btn:hover,
+  .profile-btn:hover,
+  .icon-btn:focus,
+  .profile-btn:focus {
+    transform: translateY(-2px);
+    transition: transform 0.12s ease;
+    outline: none;
+  }
+
+  /* ======================================================
+   * FOOTER
+   * ====================================================== */
+  footer {
+    background-color: #ff69b4;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+    font-size: 0.9em;
+    margin-top: auto;
+  }
