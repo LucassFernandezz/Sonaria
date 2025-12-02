@@ -4,7 +4,7 @@ from mysql.connector import Error
 CONFIG = {
     "host": "localhost",
     "user": "root",
-    "password": "tu_password",
+    "password": "Spiderman3@@",
     "database": "sonaria",
     "port": 3306
 }
