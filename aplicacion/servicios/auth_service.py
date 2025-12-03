@@ -31,7 +31,7 @@ class AuthService:
         cur = con.cursor(dictionary=True)
 
         cur.execute("""
-            SELECT id, password_hash, rol
+            SELECT id, email, password_hash, rol
             FROM usuarios
             WHERE email=%s
         """, (email,))
@@ -48,6 +48,7 @@ class AuthService:
             "ok": True,
             "usuario": {
                 "id": usuario["id"],
+                "email": email,
                 "rol": usuario["rol"]
             }
         }

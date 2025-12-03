@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from aplicacion.servicios.auth_service import AuthService
-from aplicacion.seguridad.sesiones import crear_sesion, cerrar_sesion, esta_autenticado, usuario_actual
+from aplicacion.seguridad.sesiones import crear_sesion, cerrar_sesion, esta_autenticado, usuario_actual, rol_actual
 
 
 auth_bp = Blueprint("auth_bp", __name__, url_prefix="/auth")
@@ -31,12 +31,38 @@ def login():
 
     usuario = resultado["usuario"]
 
-    crear_sesion(usuario["id"], usuario["rol"])
+    crear_sesion(
+        usuario_id = usuario["id"],
+        rol = usuario["rol"],
+        email = usuario["email"]
+    )
 
-    return jsonify({"ok": True, "usuario_id": usuario["id"], "rol": usuario["rol"]})
+    return jsonify({
+        "ok": True,
+        "mensaje": "Inicio de sesión exitoso",
+        "usuario_id": usuario["id"],
+        "email": usuario["email"],
+        "rol": usuario["rol"]
+    })
 
 
 @auth_bp.route("/logout", methods=["POST"])
 def logout():
     cerrar_sesion()
-    return jsonify({"ok": True})
+    return jsonify({"ok": True, "mensaje": "Sesión cerrada"})
+
+
+@auth_bp.route("/me", methods=["GET"])
+def auth_me():
+
+    if not esta_autenticado():
+        return jsonify({"autenticado": False})
+
+    user = usuario_actual()
+
+    return jsonify({
+        "autenticado": True,
+        "usuario_id": user.get("usuario_id"),
+        "email": user.get("email"),
+        "rol": user.get("rol")
+    })

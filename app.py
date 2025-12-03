@@ -32,7 +32,10 @@ def crear_app():
 
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
-
+    @app.route('/presentacion/<path:archivo>')
+    def servir_frontend(archivo):
+        from flask import send_from_directory
+        return send_from_directory("presentacion", archivo)
 
     # Registrar blueprints
     app.register_blueprint(auth_bp)
@@ -60,4 +63,4 @@ if __name__ == "__main__":
         hilo_tcp.start()
 
     # Arrancar Flask
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="localhost", port=5000)
