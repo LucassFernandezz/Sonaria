@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ejemplo Header</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+  <header class="header-con-busqueda header-bar">
+    <a class="logo-link" href="index.html" aria-label="Ir al inicio">
+      <img src="img/logo.png" alt="Logo" class="logo-img">
+    </a>
+
+    <div class="barra-central search-container">
+      <input type="text" placeholder="Buscar..." aria-label="Buscar">
+      <button class="search-icon-btn" aria-label="Buscar">
+        <img src="img/icon-lupa.png" alt="" width="20" height="20">
+      </button>
+    </div>
+
+    <button class="filtro-btn">Filtro</button>
+
+    <div class="iconos-header icon-group" role="toolbar" aria-label="Acciones">
+
+      <button class="icon-btn" title="Subir" aria-label="Subir">
+        <img src="img/upload.png" alt="">
+      </button>
+
+      <button class="icon-btn" title="Ajustes" aria-label="Ajustes">
+        <img src="img/settings.png" alt="">
+      </button>
+
+      <button class="profile-btn" title="Perfil" aria-label="Perfil">
+        <img src="img/perfil.png" alt="">
+      </button>
+    </div>
+  </header>
+
+<!-- FORMULARIO LOGIN -->
+  <main class="contenedor">
+    <h1>Iniciar Sesión</h1>
+
+    <form id="loginForm">
+      <label>Email</label>
+      <input type="email" id="email" required>
+
+      <label>Contraseña</label>
+      <input type="password" id="password" required>
+
+      <button type="submit" class="btn-principal">Entrar</button>
+
+      <p class="alternativa">
+        ¿No tienes cuenta?
+        <a href="register.html">Regístrate</a>
+      </p>
+
+      <p id="mensaje" class="mensaje-error"></p>
+    </form>
+  </main>
+
+  <!-- FOOTER de ejemplo (opcional) -->
+  <footer>
+    <p>Footer de ejemplo</p>
+  </footer>
+
+  <script src="login.js"></script>
+  
+</body>
+</html>

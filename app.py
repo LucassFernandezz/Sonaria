@@ -1,4 +1,4 @@
-# aplicacion/app.py
+# sonaria/app.py
 
 from flask import Flask
 from flask_cors import CORS
@@ -30,7 +30,9 @@ def crear_app():
     app.config["SESSION_PERMANENT"] = False
     Session(app)
 
-    CORS(app, resources={r"/*": {"origins": "*"}})
+    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+
+
 
     # Registrar blueprints
     app.register_blueprint(auth_bp)
