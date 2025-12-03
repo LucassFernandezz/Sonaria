@@ -18,7 +18,6 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    align-items: center; /* centrar contenido principal (puedes quitar si no quieres) */
   }
   
   /* MAIN: contenedor de contenido */
@@ -27,6 +26,7 @@
     padding: 20px;
     width: 100%;
     max-width: 1200px; /* opcional: limita ancho para pantallas grandes */
+    margin: 0 auto;
   }
 
   h1 {
@@ -268,3 +268,50 @@ form input:focus {
     font-size: 0.9em;
     margin-top: auto;
   }
+
+  /* ======================================================
+ * BOTONES LOGIN Y REGISTER
+ * ====================================================== */
+
+/* Estilos base compartidos para ambos botones */
+.login-link,
+.register-link {
+  text-decoration: none;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 8px 16px;       /* Espacio interno cómodo */
+  border-radius: 20px;     /* Bordes redondeados tipo "pastilla" */
+  border: 2px solid #ff69b4; /* Mismo rosa fuerte del borde del header */
+  transition: all 0.2s ease; /* Suaviza el efecto hover */
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Estilo específico para LOGIN (Botón tipo "Ghost" o fondo blanco) */
+.login-link {
+  background-color: white;
+  color: #ff69b4; /* Texto rosa */
+  margin-right: 8px; /* Separación con el botón de registro */
+}
+
+/* Efecto Hover para Login */
+.login-link:hover {
+  background-color: #fff0f5; /* Un rosa muy pálido al pasar el mouse */
+  transform: translateY(-2px); /* Pequeño salto hacia arriba igual que los iconos */
+  color: #e0529e;
+}
+
+/* Estilo específico para REGISTER (Botón sólido para destacar) */
+.register-link {
+  background-color: #ff69b4; /* Fondo rosa fuerte */
+  color: white;              /* Texto blanco */
+}
+
+/* Efecto Hover para Register */
+.register-link:hover {
+  background-color: #e0529e; /* Oscurece un poco el rosa */
+  border-color: #e0529e;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}

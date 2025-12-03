@@ -7,41 +7,7 @@
   <link rel="stylesheet" href="home.css">
 </head>
 <body>
-  <header class="header-con-busqueda header-bar">
-    <!-- LOGO: link a inicio -->
-    <a class="logo-link" href="index.html" aria-label="Ir al inicio">
-      <img src="img/logo.png" alt="Logo" class="logo-img">
-    </a>
-
-    <!-- BARRA CENTRAL: search + icono de lupa -->
-    <div class="barra-central search-container">
-      <input type="text" placeholder="Buscar..." aria-label="Buscar">
-      <button class="search-icon-btn" aria-label="Buscar">
-        <img src="img/icon-lupa.png" alt="" width="20" height="20">
-      </button>
-    </div>
-
-    <!-- FILTRO: Boton -->
-    <button class="filtro-btn">Filtro</button>
-
-    <!-- ICONOS A LA DERECHA: cada uno es un botón real -->
-    <div class="iconos-header icon-group" role="toolbar" aria-label="Acciones">
-      <!-- Botón subir -->
-      <button class="icon-btn" title="Subir" aria-label="Subir">
-        <img src="img/upload.png" alt="">
-      </button>
-
-      <!-- Botón ajustes -->
-      <button class="icon-btn" title="Ajustes" aria-label="Ajustes">
-        <img src="img/settings.png" alt="">
-      </button>
-
-      <!-- Botón perfil -->
-      <button class="profile-btn" title="Perfil" aria-label="Perfil">
-        <img src="img/perfil.png" alt="">
-      </button>
-    </div>
-  </header>
+  <div id="header-container"></div>
 
   <!-- ======================================================
        MAIN: contenido de ejemplo para ver el body con el fondo
@@ -56,5 +22,8 @@
   <footer>
     <p>Footer de ejemplo</p>
   </footer>
+
+  <script src="header.js"></script>
+
 </body>
 </html>

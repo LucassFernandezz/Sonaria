@@ -1,0 +1,53 @@
+<header class="header-con-busqueda header-bar">
+
+  <!-- LOGO -->
+  <a class="logo-link" href="home.html" aria-label="Ir al inicio">
+    <img src="img/logo.png" alt="Logo" class="logo-img">
+  </a>
+
+  <!-- BARRA CENTRAL: search -->
+  <div class="barra-central search-container">
+    <input type="text" placeholder="Buscar..." aria-label="Buscar">
+    <button class="search-icon-btn" aria-label="Buscar">
+      <img src="img/icon-lupa.png" alt="" width="20" height="20">
+    </button>
+  </div>
+
+  <!-- FILTRO -->
+  <button class="filtro-btn">Filtro</button>
+
+  <!-- ICONOS A LA DERECHA -->
+  <div class="iconos-header icon-group" role="toolbar" aria-label="Acciones">
+
+    <!-- SUBIR AUDIO -->
+    <button id="btn-subir" class="icon-btn oculto" title="Subir audio">
+      <img src="img/subida.png" alt="">
+    </button>
+
+    <!-- CONFIGURACION -->
+    <button id="btn-settings" class="icon-btn oculto" title="Configuración">
+      <img src="img/configuracion.png" alt="">
+    </button>
+
+    <!-- PERFIL -->
+    <button id="btn-perfil" class="profile-btn oculto" title="Perfil">
+      <img src="img/perfil.png" alt="">
+    </button>
+
+    <!-- PANEL ADMIN -->
+    <button id="btn-admin" class="icon-btn oculto" title="Administrar sitio">
+      <img src="img/admin.png" alt="">
+    </button>
+
+    <!-- LOGIN VISITANTE -->
+    <a id="btn-login" href="login.html" class="login-link oculto">Login</a>
+
+    <!-- REGISTER VISITANTE -->
+    <a id="btn-register" href="register.html" class="register-link oculto">Register</a>
+
+  </div>
+</header>
+
+<style>
+  .oculto { display: none !important; }
+</style>
