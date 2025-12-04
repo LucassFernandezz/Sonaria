@@ -32,8 +32,17 @@ async function cargarPerfil() {
 
     document.getElementById("nombre_artistico").value = p.nombre_artistico || "";
     document.getElementById("descripcion").value = p.descripcion || "";
-    document.getElementById("genero_principal").value = p.genero_principal || "";
     document.getElementById("habilidades").value = p.habilidades || "";
+
+    // --- NUEVO: select de género con validación ---
+    const generoSelect = document.getElementById("genero_principal");
+    const generosValidos = Array.from(generoSelect.options).map(o => o.value);
+
+    if (generosValidos.includes(p.genero_principal)) {
+        generoSelect.value = p.genero_principal;
+    } else {
+        generoSelect.value = "";
+    }
 }
 
 cargarPerfil();
@@ -46,7 +55,7 @@ const btnEditar = document.getElementById("btn-editar");
 const btnGuardar = document.getElementById("btn-guardar");
 
 btnEditar.onclick = () => {
-    document.querySelectorAll("input, textarea").forEach(i => i.disabled = false);
+    document.querySelectorAll("input, textarea, select").forEach(i => i.disabled = false);
     btnEditar.classList.add("oculto");
     btnGuardar.classList.remove("oculto");
 };
@@ -77,7 +86,7 @@ btnGuardar.onclick = async () => {
         alert("Perfil actualizado");
 
         // bloquear campos
-        document.querySelectorAll("input, textarea").forEach(i => i.disabled = true);
+        document.querySelectorAll("input, textarea, select").forEach(i => i.disabled = true);
         btnGuardar.classList.add("oculto");
         btnEditar.classList.remove("oculto");
     }

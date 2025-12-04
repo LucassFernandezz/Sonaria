@@ -10,35 +10,51 @@
 <div id="header-container"></div>
 <script src="header.js"></script>
 
-<main class="perfil-container">
+<main class="perfil-main">
 
-  <h1>Mi Perfil Artístico</h1>
+  <h1 class="perfil-titulo">Mi Perfil Artístico</h1>
 
   <div class="perfil-card">
 
-    <label>
-      Nombre artístico:
+    <!-- Nombre artístico -->
+    <div class="campo">
+      <label for="nombre_artistico">Nombre artístico</label>
       <input id="nombre_artistico" type="text" disabled>
-    </label>
+    </div>
 
-    <label>
-      Descripción:
-      <textarea id="descripcion" disabled></textarea>
-    </label>
+    <!-- Descripción -->
+    <div class="campo">
+      <label for="descripcion">Descripción</label>
+      <textarea id="descripcion" rows="4" disabled></textarea>
+    </div>
 
-    <label>
-      Género principal:
-      <input id="genero_principal" type="text" disabled>
-    </label>
+    <!-- Género principal (select fijo) -->
+    <div class="campo">
+      <label for="genero_principal">Género principal</label>
+      <select id="genero_principal" disabled>
+        <option value="">Seleccione un género</option>
+        <option value="rock">Rock</option>
+        <option value="pop">Pop</option>
+        <option value="trap">Trap</option>
+        <option value="rap">Rap</option>
+        <option value="reggaeton">Reggaeton</option>
+        <option value="electronica">Electrónica</option>
+        <option value="cumbia">Cumbia</option>
+        <option value="folklore">Folklore</option>
+        <option value="clasica">Clásica</option>
+      </select>
+    </div>
 
-    <label>
-      Habilidades (separadas por comas):
+    <!-- Habilidades -->
+    <div class="campo">
+      <label for="habilidades">Habilidades (separadas por comas)</label>
       <input id="habilidades" type="text" disabled>
-    </label>
+    </div>
 
+    <!-- Botones -->
     <div class="btn-row">
-      <button id="btn-editar">Editar perfil</button>
-      <button id="btn-guardar" class="oculto">Guardar cambios</button>
+      <button id="btn-editar" class="btn-rosa">Editar perfil</button>
+      <button id="btn-guardar" class="btn-verde oculto">Guardar cambios</button>
     </div>
 
   </div>
