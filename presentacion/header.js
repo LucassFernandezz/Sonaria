@@ -30,6 +30,26 @@ async function configurarHeader() {
 
     const btnAdmin = document.getElementById("btn-admin");
 
+    // SUBIR AUDIO
+    document.getElementById("btn-subir")?.addEventListener("click", () => {
+        window.location.href = "subir.html";
+    });
+
+    // CONFIGURACIÓN
+    document.getElementById("btn-settings")?.addEventListener("click", () => {
+        window.location.href = "configuracion.html";
+    });
+
+    // PERFIL
+    document.getElementById("btn-perfil")?.addEventListener("click", () => {
+        window.location.href = "perfil.html";
+    });
+
+    // PANEL ADMIN
+    document.getElementById("btn-admin")?.addEventListener("click", () => {
+        window.location.href = "admin_panel.html";
+    });
+
     // Consulta al backend
     const resp = await fetch("http://localhost:5000/auth/me", {
         credentials: "include"
