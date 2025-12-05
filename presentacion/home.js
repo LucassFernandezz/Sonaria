@@ -40,7 +40,10 @@ async function cargarAudios() {
                     Tu navegador no soporta audio.
                 </audio>
 
-                <small>Subido por: ${audio.email}</small>
+                <div class="meta-row">
+                    <small class="autor">Subido por: ${audio.nombre_artistico ? audio.nombre_artistico : audio.email}</small>
+                    <small><strong>Se necesita:</strong> ${audio.necesita || "—"}</small>
+                </div>
             `;
 
             contenedor.appendChild(card);

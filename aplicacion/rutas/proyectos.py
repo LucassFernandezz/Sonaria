@@ -74,12 +74,15 @@ def obtener_audios():
                     p.titulo,
                     p.descripcion,
                     p.genero,
+                    p.necesita,
                     p.archivo_audio,
                     p.fecha_creacion,
                     u.id AS usuario_id,
-                    u.email
+                    u.email,
+                    pa.nombre_artistico
                 FROM proyectos_audio p
                 JOIN usuarios u ON p.usuario_id = u.id
+                LEFT JOIN perfiles_artisticos pa ON pa.usuario_id = u.id
                 ORDER BY p.fecha_creacion DESC
             """)
 

@@ -299,3 +299,32 @@
   color: #777;
   font-size: 12px;
 }
+
+/* Contenedor horizontal de autor + necesita */
+.meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    gap: 15px;
+    width: 100%;
+}
+
+/* Texto del autor */
+.meta-row .autor {
+    color: #666;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Etiqueta "Se necesita:" */
+.meta-row small {
+    font-size: 13px;
+    color: #333;
+}
+
+/* Valor de lo que se necesita */
+.meta-row small strong {
+    color: #d44f7b; /* rosa oscuro elegante */
+    font-weight: 700;
+}
