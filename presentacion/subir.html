@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Subir Audio</title>
+
+  <!-- Usa tu CSS general (home.css) -->
+  <link rel="stylesheet" href="home.css">
+</head>
+<body>
+
+  <!-- HEADER DINÁMICO -->
+  <div id="header-container"></div>
+  <script src="header.js"></script>
+
+  <!-- =============================
+        MAIN: FORMULARIO SUBIR AUDIO
+  ================================= -->
+  <main class="subir-main">
+
+    <h1>Subir un nuevo audio</h1>
+
+    <form id="form-subida" enctype="multipart/form-data">
+
+      <label>
+        Título:
+        <input type="text" id="titulo" required>
+      </label>
+
+      <label>
+        Descripción:
+        <textarea id="descripcion" rows="3" required></textarea>
+      </label>
+
+      <label>
+        Género:
+        <select id="genero" required>
+          <option value="">Seleccione un género</option>
+          <option value="rock">Rock</option>
+          <option value="pop">Pop</option>
+          <option value="trap">Trap</option>
+          <option value="rap">Rap</option>
+          <option value="reggaeton">Reggaeton</option>
+          <option value="electronica">Electrónica</option>
+          <option value="cumbia">Cumbia</option>
+          <option value="folklore">Folklore</option>
+          <option value="clasica">Clásica</option>
+        </select>
+      </label>
+
+      <label>
+        Necesita:
+        <select id="necesita" required>
+          <option value="">Seleccione</option>
+          <option value="voz">Voz</option>
+          <option value="guitarra">Guitarra</option>
+          <option value="bajo">Bajo</option>
+          <option value="bateria">Batería</option>
+          <option value="mezcla">Mezcla</option>
+          <option value="master">Master</option>
+        </select>
+      </label>
+
+      <label>
+        Archivo de audio (.mp3, .wav):
+        <input type="file" id="archivo_audio" accept="audio/*" required>
+      </label>
+
+      <button type="submit" class="btn-rosa">Subir</button>
+    </form>
+
+  </main>
+
+  <script src="subir.js"></script>
+
+</body>
+</html>

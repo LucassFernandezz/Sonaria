@@ -242,3 +242,60 @@
   transform: translateY(-2px);
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
+/* ======================================================
+   TARJETAS DE AUDIOS EN HOME
+   ====================================================== */
+
+.lista-audios {
+  margin-top: 35px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+  padding: 10px;
+}
+
+/* Card individual */
+.tarjeta-audio {
+  background: #fff7ee;
+  border: 2px solid #ffb6c9;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  text-align: left;
+}
+
+/* Hover moderno */
+.tarjeta-audio:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+}
+
+/* Título */
+.tarjeta-audio h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #d44f7b; /* rosa fuerte */
+}
+
+/* Descripción */
+.tarjeta-audio p {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 12px;
+}
+
+/* Audio player estético */
+.tarjeta-audio audio {
+  width: 100%;
+  margin: 10px 0;
+  border-radius: 10px;
+  outline: none;
+}
+
+/* Texto del autor */
+.tarjeta-audio small {
+  color: #777;
+  font-size: 12px;
+}

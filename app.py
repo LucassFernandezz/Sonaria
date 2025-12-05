@@ -1,6 +1,6 @@
 # sonaria/app.py
 
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 from flask_session import Session
 from threading import Thread
@@ -32,10 +32,15 @@ def crear_app():
 
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
+    # Ruta para servir archivos del frontend
     @app.route('/presentacion/<path:archivo>')
     def servir_frontend(archivo):
-        from flask import send_from_directory
         return send_from_directory("presentacion", archivo)
+    
+    # Ruta para servir audios subidos
+    @app.route('/uploads/<path:filename>')
+    def servir_uploads(filename):
+        return send_from_directory("uploads", filename)
 
     # Registrar blueprints
     app.register_blueprint(auth_bp)
