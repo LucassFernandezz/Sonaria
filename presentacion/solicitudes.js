@@ -1,5 +1,5 @@
 // ================================
-// Obtener id del proyecto
+// Obtener ID del proyecto desde la URL
 // ================================
 const params = new URLSearchParams(window.location.search);
 const proyectoId = params.get("proyecto");
@@ -11,7 +11,7 @@ if (!proyectoId) {
 
 
 // ================================
-// Cargar solicitudes
+// Cargar solicitudes del servidor
 // ================================
 async function cargarSolicitudes() {
 
@@ -28,6 +28,7 @@ async function cargarSolicitudes() {
 
     renderSolicitudes(data.solicitudes);
 }
+
 
 
 // ================================
@@ -51,18 +52,55 @@ function renderSolicitudes(lista) {
 
         div.innerHTML = `
             <p><strong>${nombre}</strong> (${sol.estado})</p>
-            <button class="btn-aceptar">Aceptar</button>
-            <button class="btn-rechazar">Rechazar</button>
+            <div class="acciones"></div>
             <hr>
         `;
 
-        // listeners
-        div.querySelector(".btn-aceptar").onclick = () => aceptar(sol.id);
-        div.querySelector(".btn-rechazar").onclick = () => rechazar(sol.id);
+        const acciones = div.querySelector(".acciones");
+
+        // ---------------------------
+        // ESTADO PENDIENTE
+        // ---------------------------
+        if (sol.estado === "pendiente") {
+            acciones.innerHTML = `
+                <button class="btn-aceptar">Aceptar</button>
+                <button class="btn-rechazar">Rechazar</button>
+            `;
+
+            acciones.querySelector(".btn-aceptar").onclick = () => aceptar(sol.colaboracion_id);
+            acciones.querySelector(".btn-rechazar").onclick = () => rechazar(sol.colaboracion_id);
+
+        }
+
+        // ---------------------------
+        // ESTADO ACEPTADO
+        // ---------------------------
+        if (sol.estado === "aceptada") {
+
+            if (!sol.colaboracion_id) {
+                acciones.innerHTML = `<p style="color:red;">Error: falta colaboracion_id</p>`;
+            } else {
+                acciones.innerHTML = `
+                    <button class="btn-entrar">Entrar a la colaboración</button>
+                `;
+
+                acciones.querySelector(".btn-entrar").onclick = () => {
+                    window.location.href = `colaboracion.html?id=${sol.colaboracion_id}`;
+                };
+            }
+        }
+
+        // ---------------------------
+        // ESTADO RECHAZADO
+        // ---------------------------
+        if (sol.estado === "rechazado") {
+            acciones.innerHTML = `<p style="color:red;">Solicitud rechazada</p>`;
+        }
 
         main.appendChild(div);
     });
 }
+
 
 
 // ================================
@@ -82,6 +120,8 @@ async function aceptar(id) {
     }
 }
 
+
+
 // ================================
 // Rechazar solicitud
 // ================================
@@ -99,6 +139,7 @@ async function rechazar(id) {
         alert("Error al rechazar solicitud");
     }
 }
+
 
 
 // Iniciar

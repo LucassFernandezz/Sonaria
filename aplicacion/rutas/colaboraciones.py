@@ -33,10 +33,10 @@ def obtener_solicitudes(proyecto_id):
         if proyecto["usuario_id"] != user["usuario_id"]:
             return jsonify({"ok": False, "error": "No autorizado"}), 403
 
-        # Obtener solicitudes
+        # Obtener solicitudes (AQUÍ AÑADIMOS colaboracion_id = c.id)
         cursor.execute("""
             SELECT 
-                c.id,
+                c.id AS colaboracion_id,
                 c.estado,
                 u.email,
                 pa.nombre_artistico
@@ -52,7 +52,7 @@ def obtener_solicitudes(proyecto_id):
     conn.close()
 
     return jsonify({"ok": True, "solicitudes": solicitudes})
-    
+
 
 # ==========================================================
 # 2) Aceptar solicitud
@@ -68,7 +68,7 @@ def aceptar_solicitud(colab_id):
     conn = obtener_conexion()
     with conn.cursor(dictionary=True) as cursor:
 
-        # Verificar que la solicitud exista y que el usuario sea dueño del proyecto
+        # Verificar que la solicitud existe y pertenece al dueño
         cursor.execute("""
             SELECT c.proyecto_id, p.usuario_id
             FROM colaboraciones c
@@ -83,18 +83,27 @@ def aceptar_solicitud(colab_id):
         if fila["usuario_id"] != user["usuario_id"]:
             return jsonify({"ok": False, "error": "No autorizado"}), 403
 
-        # Actualizar estado
+        proyecto_id = fila["proyecto_id"]
+
+        # 1) Aceptar esta solicitud
         cursor.execute("""
             UPDATE colaboraciones
             SET estado = 'aceptada'
             WHERE id = %s
         """, (colab_id,))
 
+        # 2) Rechazar todas las demás
+        cursor.execute("""
+            UPDATE colaboraciones
+            SET estado = 'rechazada'
+            WHERE proyecto_id = %s AND id != %s
+        """, (proyecto_id, colab_id))
+
         conn.commit()
 
     conn.close()
 
-    return jsonify({"ok": True, "mensaje": "Solicitud aceptada"})
+    return jsonify({"ok": True, "mensaje": "Solicitud aceptada", "colaboracion_id": colab_id})
 
 
 # ==========================================================
