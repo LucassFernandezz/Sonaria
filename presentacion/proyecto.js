@@ -89,6 +89,15 @@ function renderBotonAccion(p) {
         return;
     }
 
+    if (p.solicitud_estado === "rechazada") {
+        const msg = document.createElement("p");
+        msg.textContent = "Tu solicitud fue rechazada ❌ Busca otros proyectos.";
+        msg.style.color = "red";
+        msg.style.fontWeight = "bold";
+        cont.appendChild(msg);
+        return;
+    }
+
     // Caso 4: puedo enviar solicitud
     boton.textContent = "Quiero colaborar";
     boton.onclick = enviarSolicitud;
