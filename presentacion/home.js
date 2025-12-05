@@ -31,6 +31,8 @@ async function cargarAudios() {
             const card = document.createElement("div");
             card.classList.add("tarjeta-audio");
 
+            card.dataset.id = audio.id;
+
             card.innerHTML = `
                 <h3>${audio.titulo}</h3>
                 <p>${audio.descripcion || ""}</p>
@@ -45,6 +47,13 @@ async function cargarAudios() {
                     <small><strong>Se necesita:</strong> ${audio.necesita || "—"}</small>
                 </div>
             `;
+
+            card.style.cursor = "pointer"; // opcional, mejora UX
+
+            card.addEventListener("click", () => {
+                window.location.href = `proyecto.html?id=${audio.id}`;
+            });
+
 
             contenedor.appendChild(card);
         });
