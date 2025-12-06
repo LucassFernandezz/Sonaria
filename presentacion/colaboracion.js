@@ -24,7 +24,13 @@ const el = {
     archivoInput: document.getElementById("archivo"),
     comentarioInput: document.getElementById("comentario"),
     btnSubir: document.getElementById("btn-subir"),
-    btnCancelar: document.getElementById("btn-cancelar")
+    btnCancelar: document.getElementById("btn-cancelar"),
+    resultadoFinalBlock: document.getElementById("resultado-final-block"),
+    resultadoPlayer: document.getElementById("resultado-player"),
+    publicarFinalBlock: document.getElementById("publicar-final-block"),
+    formFinal: document.getElementById("form-final"),
+    finalArchivoInput: document.getElementById("final-archivo")
+
 };
 
 let detalle = null; // guardamos el JSON de /detalle
@@ -238,30 +244,32 @@ function handleCancelar() {
 // Determina si el usuario actual es parte de esta colaboración (dueño o colaborador)
 // y muestra el bloque de subida si corresponde.
 function configurarAccesoSubida() {
-    // Para comprobar el usuario actual pedimos /auth/me (ya lo usás en otras páginas).
     fetch(`${API_BASE}/auth/me`, { credentials: "include" })
         .then(r => r.json())
         .then(data => {
             if (!data.autenticado) {
-                // no mostrar formulario
                 el.subirBlock.style.display = "none";
+                el.publicarFinalBlock.style.display = "none";
                 return;
             }
+
             const uid = data.usuario_id;
             const esDueno = uid === detalle.dueno_id;
             const esColab = uid === detalle.colaborador_id;
 
-            if (esDueno || esColab) {
-                el.subirBlock.style.display = "block";
-            } else {
-                el.subirBlock.style.display = "none";
-            }
+            // Mostrar subir takes
+            el.subirBlock.style.display = (esDueno || esColab) ? "block" : "none";
+
+            // Mostrar publicar resultado final (solo dueño)
+            el.publicarFinalBlock.style.display = esDueno ? "block" : "none";
         })
         .catch(err => {
             console.error("Error auth/me", err);
             el.subirBlock.style.display = "none";
+            el.publicarFinalBlock.style.display = "none";
         });
 }
+
 
 // utility: formato fecha legible
 function formatFecha(iso) {
@@ -274,9 +282,85 @@ function formatFecha(iso) {
     }
 }
 
+async function cargarResultadoFinal() {
+    try {
+        const resp = await fetch(`${API_BASE}/colaboraciones/resultado_final/${colabId}`, {
+            credentials: "include"
+        });
+
+        const data = await resp.json();
+
+        if (data.ok && data.resultado) {
+            mostrarResultadoFinal(data.resultado);
+        } else {
+            el.resultadoFinalBlock.style.display = "block";
+        }
+
+    } catch (err) {
+        console.error("Error resultado final:", err);
+    }
+}
+
+
+function mostrarResultadoFinal(filename) {
+    el.resultadoFinalBlock.style.display = "block";
+
+    el.resultadoPlayer.innerHTML = `
+        <audio controls style="width:100%;">
+            <source src="${API_BASE}/uploads/${filename}">
+        </audio>
+        <br>
+        <a href="${API_BASE}/uploads/${filename}" download="${filename}" class="btn-accion">
+            Descargar resultado final
+        </a>
+    `;
+}
+
+
+async function handlePublicarFinal(ev) {
+    ev.preventDefault();
+
+    const file = el.finalArchivoInput.files[0];
+    if (!file) {
+        mostrarMensaje("Seleccioná un archivo final.", "error");
+        return;
+    }
+
+    const fd = new FormData();
+    fd.append("archivo", file);
+
+    mostrarMensaje("Subiendo resultado final...");
+
+    try {
+        const resp = await fetch(`${API_BASE}/colaboraciones/publicar_resultado/${colabId}`, {
+            method: "POST",
+            credentials: "include",
+            body: fd
+        });
+
+        const data = await resp.json();
+        if (!data.ok) {
+            mostrarMensaje(data.error || "Error al subir resultado final.", "error");
+            return;
+        }
+
+        mostrarMensaje("Resultado final publicado ✔", "success");
+        cargarResultadoFinal();
+
+    } catch (err) {
+        console.error(err);
+        mostrarMensaje("Error de conexión", "error");
+    }
+}
+
+
+el.formFinal && el.formFinal.addEventListener("submit", handlePublicarFinal);
+
+
+
 // Iniciar
 el.formSubir && el.formSubir.addEventListener("submit", handleSubir);
 el.btnCancelar && el.btnCancelar.addEventListener("click", handleCancelar);
 
 // Carga inicial
-cargarDetalle();
+cargarDetalle().then(cargarResultadoFinal);

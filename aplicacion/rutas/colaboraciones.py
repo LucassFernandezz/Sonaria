@@ -298,3 +298,82 @@ def obtener_takes(colab_id):
     
     conn.close()
     return jsonify({"ok": True, "takes": datos})
+
+# ==========================================================
+# 6) Publicar resultado final (SOLO DUEÑO)
+# ==========================================================
+@colaboraciones_bp.route("/publicar_resultado/<int:colab_id>", methods=["POST"])
+def publicar_resultado(colab_id):
+
+    if not esta_autenticado():
+        return jsonify({"ok": False, "error": "No autenticado"}), 401
+
+    user = usuario_actual()
+
+    if "archivo" not in request.files:
+        return jsonify({"ok": False, "error": "Archivo no enviado"}), 400
+
+    archivo = request.files["archivo"]
+
+    if archivo.filename == "":
+        return jsonify({"ok": False, "error": "Nombre inválido"}), 400
+
+    filename = secure_filename(str(int(time.time())) + "_" + archivo.filename)
+    ruta = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
+    archivo.save(ruta)
+
+    conn = obtener_conexion()
+    with conn.cursor(dictionary=True) as cursor:
+
+        # Obtener dueño del proyecto
+        cursor.execute("""
+            SELECT p.usuario_id
+            FROM colaboraciones c
+            JOIN proyectos_audio p ON p.id = c.proyecto_id
+            WHERE c.id = %s AND c.estado = 'aceptada'
+        """, (colab_id,))
+        fila = cursor.fetchone()
+
+        if not fila:
+            return jsonify({"ok": False, "error": "Colaboración no encontrada"}), 404
+
+        if fila["usuario_id"] != user["usuario_id"]:
+            return jsonify({"ok": False, "error": "No autorizado"}), 403
+
+        # Guardar resultado final
+        cursor.execute("""
+            UPDATE colaboraciones
+            SET resultado_final = %s
+            WHERE id = %s
+        """, (filename, colab_id))
+
+        conn.commit()
+
+    conn.close()
+    return jsonify({"ok": True, "mensaje": "Resultado final publicado"})
+
+
+# ==========================================================
+# 7) Obtener resultado final
+# ==========================================================
+@colaboraciones_bp.route("/resultado_final/<int:colab_id>", methods=["GET"])
+def obtener_resultado_final(colab_id):
+
+    if not esta_autenticado():
+        return jsonify({"ok": False}), 401
+
+    conn = obtener_conexion()
+    with conn.cursor(dictionary=True) as cursor:
+        cursor.execute("""
+            SELECT resultado_final
+            FROM colaboraciones
+            WHERE id = %s
+        """, (colab_id,))
+        fila = cursor.fetchone()
+
+    conn.close()
+
+    if not fila or not fila["resultado_final"]:
+        return jsonify({"ok": False, "resultado": None})
+
+    return jsonify({"ok": True, "resultado": fila["resultado_final"]})
