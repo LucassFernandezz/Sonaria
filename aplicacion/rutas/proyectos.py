@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 
 from aplicacion.seguridad.sesiones import esta_autenticado, usuario_actual
 from aplicacion.servicios.proyecto_services import ProyectoService
+from aplicacion.servicios.logger import registrar_evento    # 🟢 AUDITORÍA
 from persistencia.conexion import obtener_conexion
 
 proyectos_bp = Blueprint("proyectos_bp", __name__, url_prefix="/proyectos")
@@ -25,6 +26,12 @@ def es_extension_valida(nombre):
 def crear_proyecto():
 
     if not esta_autenticado():
+        registrar_evento(
+            usuario_id=None,
+            accion="crear_proyecto_denegado",
+            detalles={"motivo": "no_autenticado"},
+            ip=request.remote_addr
+        ) #para auditoria
         return jsonify({"ok": False, "error": "No autenticado"}), 401
 
     user = usuario_actual()
@@ -33,13 +40,24 @@ def crear_proyecto():
     descripcion = request.form.get("descripcion")
     genero = request.form.get("genero")
     necesita = request.form.get("necesita")
-
     archivo = request.files.get("archivo_audio")
 
     if not archivo:
+        registrar_evento(
+            usuario_id=user["usuario_id"],
+            accion="crear_proyecto_fallido",
+            detalles={"motivo": "sin_archivo"},
+            ip=request.remote_addr
+        ) #para auditoria
         return jsonify({"ok": False, "error": "No enviaste un archivo"}), 400
 
     if not es_extension_valida(archivo.filename):
+        registrar_evento(
+            usuario_id=user["usuario_id"],
+            accion="crear_proyecto_fallido",
+            detalles={"motivo": "extension_invalida", "archivo": archivo.filename},
+            ip=request.remote_addr
+        ) #para auditoria
         return jsonify({"ok": False, "error": "Formato no permitido"}), 400
 
     filename = secure_filename(archivo.filename)
@@ -54,6 +72,17 @@ def crear_proyecto():
         necesita=necesita,
         archivo_audio=filename
     )
+
+    registrar_evento(
+        usuario_id=user["usuario_id"],
+        accion="crear_proyecto",
+        detalles={
+            "proyecto_id": proyecto_id,
+            "titulo": titulo,
+            "archivo": filename
+        },
+        ip=request.remote_addr
+    ) #oara auditoria
 
     return jsonify({"ok": True, "proyecto_id": proyecto_id})
 
@@ -104,6 +133,13 @@ def obtener_proyecto(proyecto_id):
     try:
         user = usuario_actual() if esta_autenticado() else None
         user_id = user["usuario_id"] if user else None
+
+        registrar_evento(
+            usuario_id=user_id,
+            accion="ver_proyecto",
+            detalles={"proyecto_id": proyecto_id},
+            ip=request.remote_addr
+        ) # para auditoria
 
         conn = obtener_conexion()
         with conn.cursor(dictionary=True) as cursor:
@@ -174,6 +210,12 @@ def obtener_proyecto(proyecto_id):
 def solicitar_colaboracion(proyecto_id):
 
     if not esta_autenticado():
+        registrar_evento(
+            usuario_id=None,
+            accion="solicitar_colaboracion_denegado",
+            detalles={"proyecto_id": proyecto_id, "motivo": "no_autenticado"},
+            ip=request.remote_addr
+        ) #para auditoria
         return jsonify({"ok": False, "error": "No autenticado"}), 401
 
     user = usuario_actual()
@@ -187,11 +229,23 @@ def solicitar_colaboracion(proyecto_id):
         proyecto = cursor.fetchone()
 
         if not proyecto:
+            registrar_evento(
+                usuario_id=user_id,
+                accion="solicitar_colaboracion_fallido",
+                detalles={"motivo": "proyecto_no_existe", "proyecto_id": proyecto_id},
+                ip=request.remote_addr
+            ) # auditoria
             conn.close()
             return jsonify({"ok": False, "error": "Proyecto no encontrado"}), 404
 
         # 2) No puedes solicitar tu propio proyecto
         if proyecto["usuario_id"] == user_id:
+            registrar_evento(
+                usuario_id=user_id,
+                accion="solicitar_colaboracion_fallido",
+                detalles={"motivo": "propio_proyecto", "proyecto_id": proyecto_id},
+                ip=request.remote_addr
+            ) #auditoria
             conn.close()
             return jsonify({"ok": False, "error": "No puedes colaborar en tu propio proyecto"}), 400
 
@@ -204,6 +258,12 @@ def solicitar_colaboracion(proyecto_id):
         existente = cursor.fetchone()
 
         if existente:
+            registrar_evento(
+                usuario_id=user_id,
+                accion="solicitar_colaboracion_fallido",
+                detalles={"motivo": "ya_existente", "proyecto_id": proyecto_id},
+                ip=request.remote_addr
+            ) #auditoria
             conn.close()
             return jsonify({"ok": False, "error": "Ya enviaste una solicitud"}), 400
 
@@ -215,6 +275,14 @@ def solicitar_colaboracion(proyecto_id):
 
         conn.commit()
         conn.close()
+
+        registrar_evento(
+            usuario_id=user_id,
+            accion="solicitar_colaboracion",
+            detalles={"proyecto_id": proyecto_id},
+            ip=request.remote_addr
+        ) #auditoria
+
 
         return jsonify({"ok": True, "mensaje": "Solicitud enviada"})
 

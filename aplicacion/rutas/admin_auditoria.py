@@ -1,22 +1,56 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from aplicacion.seguridad.sesiones import esta_autenticado, usuario_actual
 from persistencia.conexion import obtener_conexion
+from aplicacion.servicios.logger import registrar_evento
 
-# Usamos tu prefix original
 auditoria_bp = Blueprint("auditoria_bp", __name__, url_prefix="/admin/auditoria")
 
 
 @auditoria_bp.get("/")
 def listar_auditoria():
-    # Solo usuarios logueados
+
+    # -------------------------------------------------------
+    # Caso 1: NO autenticado → 401 + AUDITAR intento
+    # -------------------------------------------------------
     if not esta_autenticado():
+
+        registrar_evento(
+            usuario_id=None,
+            accion="acceso_denegado",
+            detalles={
+                "motivo": "usuario no autenticado",
+                "ruta": "/admin/auditoria"
+            }
+        )
+
         return jsonify({"error": "No autorizado"}), 401
 
     user = usuario_actual()
 
-    # Solo administrador
+    # -------------------------------------------------------
+    # Caso 2: Autenticado pero NO admin → 403 + AUDITAR intento
+    # -------------------------------------------------------
     if user["rol"] != "admin":
+
+        registrar_evento(
+            usuario_id=user["usuario_id"],
+            accion="acceso_denegado",
+            detalles={
+                "motivo": "rol no admin",
+                "ruta": "/admin/auditoria"
+            }
+        )
+
         return jsonify({"error": "Solo admin"}), 403
+
+    # -------------------------------------------------------
+    # Caso 3: ADMIN → acceso permitido y auditado
+    # -------------------------------------------------------
+    registrar_evento(
+        usuario_id=user["usuario_id"],
+        accion="ver_auditoria",
+        detalles={"ruta": "/admin/auditoria"}
+    )
 
     conn = obtener_conexion()
     cursor = conn.cursor(dictionary=True)
@@ -36,3 +70,4 @@ def listar_auditoria():
     conn.close()
 
     return jsonify({"ok": True, "auditoria": datos}), 200
+
