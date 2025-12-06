@@ -10,7 +10,6 @@ from aplicacion.rutas.auth import auth_bp
 from aplicacion.rutas.perfiles import perfiles_bp
 from aplicacion.rutas.proyectos import proyectos_bp
 from aplicacion.rutas.colaboraciones import colaboraciones_bp
-from aplicacion.rutas.takes import takes_bp
 from aplicacion.rutas.admin_auditoria import auditoria_bp
 from aplicacion.rutas.admin_integridad import integridad_bp
 from aplicacion.rutas.admin_metricas import metricas_bp
@@ -50,7 +49,6 @@ def crear_app():
     app.register_blueprint(perfiles_bp)
     app.register_blueprint(proyectos_bp)
     app.register_blueprint(colaboraciones_bp)
-    app.register_blueprint(takes_bp)
     app.register_blueprint(auditoria_bp)
     app.register_blueprint(integridad_bp)
     app.register_blueprint(metricas_bp)
