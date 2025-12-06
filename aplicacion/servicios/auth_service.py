@@ -23,7 +23,18 @@ class AuthService:
 
         con.commit()
 
-        return {"ok": True}
+        # 🔥 OBTENER EL ID INSERTADO
+        nuevo_id = cur.lastrowid
+
+        return {
+            "ok": True,
+            "usuario": {
+                "id": nuevo_id,
+                "email": email,
+                "rol": "registrado"
+            }
+        }
+
 
     @staticmethod
     def login(email, password):
