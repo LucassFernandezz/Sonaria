@@ -238,3 +238,41 @@ def proyectos_mios():
     conn.close()
 
     return jsonify({"ok": True, "proyectos": proyectos})
+
+# ==========================================================
+# Proyectos donde el usuario es colaborador aceptado
+# ==========================================================
+@proyectos_bp.route("/colaborando", methods=["GET"])
+def proyectos_colaborando():
+
+    if not esta_autenticado():
+        return jsonify({"ok": False, "error": "No autenticado"}), 401
+
+    user = usuario_actual()
+    uid = user["usuario_id"]
+
+    conn = obtener_conexion()
+    with conn.cursor(dictionary=True) as cursor:
+        cursor.execute("""
+            SELECT 
+                p.id,
+                p.titulo,
+                p.descripcion,
+                p.necesita,
+                p.archivo_audio,
+                u.email AS dueno_email,
+                pa.nombre_artistico AS dueno_nombre
+            FROM colaboraciones c
+            JOIN proyectos_audio p ON p.id = c.proyecto_id
+            JOIN usuarios u ON u.id = p.usuario_id
+            LEFT JOIN perfiles_artisticos pa ON pa.usuario_id = u.id
+            WHERE c.usuario_colaborador_id = %s
+              AND c.estado = 'aceptada'
+            ORDER BY p.fecha_creacion DESC
+        """, (uid,))
+
+        proyectos = cursor.fetchall()
+
+    conn.close()
+
+    return jsonify({"ok": True, "proyectos": proyectos})

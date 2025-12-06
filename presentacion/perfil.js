@@ -143,3 +143,49 @@ btnGuardar.onclick = async () => {
     }
 };
 
+// =======================================
+// Cargar proyectos donde soy colaborador
+// =======================================
+async function cargarProyectosColaborando() {
+    const cont = document.getElementById("lista-colaborando");
+
+    const resp = await fetch("http://localhost:5000/proyectos/colaborando", {
+        credentials: "include"
+    });
+
+    const data = await resp.json();
+
+    if (!data.ok) {
+        cont.innerHTML = "<p>Error al cargar proyectos donde colaboras</p>";
+        return;
+    }
+
+    const proyectos = data.proyectos;
+
+    if (proyectos.length === 0) {
+        cont.innerHTML = "<p>No estás colaborando en ningún proyecto aún.</p>";
+        return;
+    }
+
+    cont.innerHTML = "";
+
+    proyectos.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "proyecto-card";
+
+        card.innerHTML = `
+            <h3>${p.titulo}</h3>
+            <p><strong>Dueño:</strong> ${p.dueno_nombre || p.dueno_email}</p>
+            <p>${p.descripcion || ""}</p>
+            <button class="btn-rosa">Entrar a la colaboración</button>
+        `;
+
+        card.onclick = () => {
+            window.location.href = `colaboracion.html?id=${p.id}`;
+        };
+
+        cont.appendChild(card);
+    });
+}
+
+cargarProyectosColaborando();
