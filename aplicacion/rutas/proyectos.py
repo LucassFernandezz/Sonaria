@@ -217,3 +217,24 @@ def solicitar_colaboracion(proyecto_id):
         conn.close()
 
         return jsonify({"ok": True, "mensaje": "Solicitud enviada"})
+
+@proyectos_bp.route("/mios", methods=["GET"])
+def proyectos_mios():
+    if not esta_autenticado():
+        return jsonify({"ok": False, "error": "No autenticado"}), 401
+
+    user = usuario_actual()
+
+    conn = obtener_conexion()
+    with conn.cursor(dictionary=True) as cursor:
+        cursor.execute("""
+            SELECT id, titulo, genero, estado
+            FROM proyectos_audio
+            WHERE usuario_id = %s
+            ORDER BY fecha_creacion DESC
+        """, (user["usuario_id"],))
+        proyectos = cursor.fetchall()
+
+    conn.close()
+
+    return jsonify({"ok": True, "proyectos": proyectos})

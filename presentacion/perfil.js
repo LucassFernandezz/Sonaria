@@ -47,6 +47,57 @@ async function cargarPerfil() {
 
 cargarPerfil();
 
+// =======================
+// Cargar proyectos propios
+// =======================
+async function cargarMisProyectos() {
+    const cont = document.getElementById("mis-proyectos");
+    cont.innerHTML = "<p>Cargando...</p>";
+
+    const resp = await fetch("http://localhost:5000/proyectos/mios", {
+        credentials: "include"
+    });
+
+    const data = await resp.json();
+
+    if (!data.ok) {
+        cont.innerHTML = "<p>Error al cargar proyectos.</p>";
+        return;
+    }
+
+    cont.innerHTML = "";
+
+    if (data.proyectos.length === 0) {
+        cont.innerHTML = "<p>No tenés proyectos creados aún.</p>";
+        return;
+    }
+
+    data.proyectos.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "card-proyecto";
+        card.style = `
+            background:#fff;
+            border:1px solid #ddd;
+            padding:12px;
+            border-radius:10px;
+            cursor:pointer;
+        `;
+        card.innerHTML = `
+            <h3>${p.titulo}</h3>
+            <p style="color:#666;">${p.genero || ""}</p>
+        `;
+
+        // Click -> ir a colaboración del dueño
+        card.onclick = () => {
+            window.location.href = `proyecto.html?id=${p.id}`;
+        };
+
+        cont.appendChild(card);
+    });
+}
+
+cargarMisProyectos();
+
 
 // =======================
 // Modo edición
@@ -91,3 +142,4 @@ btnGuardar.onclick = async () => {
         btnEditar.classList.remove("oculto");
     }
 };
+
