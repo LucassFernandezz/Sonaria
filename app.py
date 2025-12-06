@@ -32,6 +32,9 @@ def crear_app():
 
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
+    # Indico dónde se guardan los audios
+    app.config["UPLOAD_FOLDER"] = "uploads"
+
     # Ruta para servir archivos del frontend
     @app.route('/presentacion/<path:archivo>')
     def servir_frontend(archivo):
