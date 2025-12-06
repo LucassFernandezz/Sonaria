@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sonaria - Colaboración</title>
+  <link rel="stylesheet" href="colaboracion.css">
+  <!-- No incluyo CSS nuevo; usa tu proyecto.css o global -->
+</head>
+<body>
+  <div id="header-container"></div>
+
+  <main id="colaboracion-main" style="max-width:1100px; margin:24px auto; padding:0 16px;">
+    <div id="mensaje" aria-live="polite" style="margin-bottom:12px;"></div>
+
+    <!-- Cabecera proyecto -->
+    <section id="info-proyecto" style="background:#fff7ee;border:2px solid #ffb6c9;border-radius:12px;padding:18px;margin-bottom:18px;">
+      <h1 id="titulo-proyecto">Cargando colaboración...</h1>
+
+      <div id="meta-proyecto" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
+        <div><strong>Dueño:</strong> <span id="dueno"></span></div>
+        <div><strong>Colaborador:</strong> <span id="colaborador"></span></div>
+        <div><strong>Estado:</strong> <span id="estado"></span></div>
+      </div>
+
+      <div id="audio-original-block" style="margin-top:14px;">
+        <h3>Audio original</h3>
+        <div id="audio-original-player"></div>
+      </div>
+    </section>
+
+    <!-- Timeline de takes -->
+    <section id="timeline" style="margin-bottom:18px;">
+      <h2>Timeline de audios</h2>
+      <div id="lista-takes">
+        <p>Cargando audios...</p>
+      </div>
+    </section>
+
+    <!-- Formulario subir take (visible sólo si eres participante) -->
+    <section id="subir-block" style="background:#fff; border:1px solid #e5e5e5; padding:14px; border-radius:10px; display:none;">
+      <h3>Subir un nuevo take</h3>
+      <form id="form-subir" enctype="multipart/form-data">
+        <div style="margin-bottom:8px;">
+          <label>Archivo audio (mp3/m4a/wav/ogg):</label><br>
+          <input type="file" id="archivo" name="archivo" accept=".mp3,.m4a,.wav,.ogg" required>
+        </div>
+
+        <div style="margin-bottom:8px;">
+          <label>Comentario (opcional):</label><br>
+          <input type="text" id="comentario" name="comentario" placeholder="Pequeña nota sobre este take" style="width:100%;padding:6px;">
+        </div>
+
+        <div style="display:flex;gap:8px;">
+          <button type="submit" id="btn-subir">Subir take</button>
+          <button type="button" id="btn-cancelar">Cancelar</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <footer style="text-align:center;padding:16px 0;">Sonaria © 2025</footer>
+
+  <script src="header.js"></script>
+  <script src="colaboracion.js"></script>
+</body>
+</html>
