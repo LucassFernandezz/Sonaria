@@ -114,3 +114,10 @@ CREATE TABLE secretos (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
         ON DELETE CASCADE
 );
+
+ALTER TABLE colaboraciones 
+ADD COLUMN resultado_final VARCHAR(255) NULL;
+
+
+ALTER TABLE colaboraciones
+MODIFY estado ENUM('pendiente','aceptada','rechazada','finalizada') DEFAULT 'pendiente';

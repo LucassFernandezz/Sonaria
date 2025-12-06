@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from aplicacion.servicios.auth_service import AuthService
 from aplicacion.seguridad.sesiones import crear_sesion, cerrar_sesion, esta_autenticado, usuario_actual, rol_actual
-
+from aplicacion.seguridad.auditoria import registrar_evento # esto se añade para hacer las cosas de auditoria
 
 auth_bp = Blueprint("auth_bp", __name__, url_prefix="/auth")
 
@@ -13,6 +13,20 @@ def register():
     password = datos.get("password")
 
     resultado = AuthService.registrar(email, password)
+
+    # registrar evento si ok
+    if resultado.get("ok"):
+        registrar_evento(
+            usuario_id=resultado["usuario"]["id"],
+            accion="registro",
+            detalles={"email": email}
+        )  # agrego para auditoria
+    else:
+        registrar_evento(
+            usuario_id=None,
+            accion="registro_fallido",
+            detalles={"email": email, "motivo": resultado.get("error")}
+        )  # agrego para auditoria
 
     return jsonify(resultado)
 
@@ -27,6 +41,11 @@ def login():
     resultado = AuthService.login(email, password)
 
     if not resultado["ok"]:
+        registrar_evento(
+            usuario_id=None,
+            accion="login_fallido",
+            detalles={"email": email}
+        )  # agrego para auditoria
         return jsonify(resultado), 400
 
     usuario = resultado["usuario"]
@@ -36,6 +55,12 @@ def login():
         rol = usuario["rol"],
         email = usuario["email"]
     )
+
+    registrar_evento(
+        usuario_id=usuario["id"],
+        accion="login_exitoso",
+        detalles={"email": usuario["email"]}
+    )  # agrego para auditoria
 
     return jsonify({
         "ok": True,
@@ -48,6 +73,15 @@ def login():
 
 @auth_bp.route("/logout", methods=["POST"])
 def logout():
+    user = usuario_actual()
+
+    if user:
+        registrar_evento(
+            usuario_id=user["usuario_id"],
+            accion="logout",
+            detalles={"email": user["email"]}
+        )  # agrego para auditoria
+
     cerrar_sesion()
     return jsonify({"ok": True, "mensaje": "Sesión cerrada"})
 
