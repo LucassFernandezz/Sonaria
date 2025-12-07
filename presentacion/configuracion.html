@@ -16,11 +16,50 @@
 
     <hr style="margin:20px 0;">
 
+    <!-- BOTÓN CERRAR SESIÓN -->
     <button id="logout-btn" style="padding:10px 16px;background:#ff3b3b;color:#fff;border:none;border-radius:8px;cursor:pointer;">
         Cerrar sesión
     </button>
 
     <p id="mensaje" style="margin-top:20px;color:#333;"></p>
+
+    <hr style="margin:30px 0;">
+
+    <!-- FORMULARIO DE RECTIFICACIÓN -->
+    <h2>Solicitar rectificación de datos</h2>
+
+    <form id="rectificacion-form" style="display:flex;flex-direction:column;gap:12px;margin-top:10px;">
+
+        <label>
+            Campo a rectificar:
+            <select id="campo-input" style="width:100%;padding:8px;border-radius:6px;border:1px solid #ccc;">
+                <option value="">Seleccionar...</option>
+                <option value="nombre_artistico">Nombre artístico</option>
+                <option value="descripcion">Descripción</option>
+                <option value="genero_principal">Género principal</option>
+                <option value="habilidades">Habilidades</option>
+            </select>
+        </label>
+
+        <label>
+            Valor actual incorrecto:
+            <textarea id="valor-viejo-input" placeholder="Valor actual"
+                      style="width:100%;padding:8px;border-radius:6px;border:1px solid #ccc;"></textarea>
+        </label>
+
+        <label>
+            Nuevo valor:
+            <textarea id="valor-nuevo-input" placeholder="Nuevo valor sugerido"
+                      style="width:100%;padding:8px;border-radius:6px;border:1px solid #ccc;"></textarea>
+        </label>
+
+        <button type="submit"
+                style="padding:10px 16px;background:#007bff;color:#fff;border:none;border-radius:8px;cursor:pointer;">
+            Enviar solicitud
+        </button>
+
+        <p id="rectificacion-msg"></p>
+    </form>
 
 </main>
 
