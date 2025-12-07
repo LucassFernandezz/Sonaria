@@ -115,6 +115,14 @@ CREATE TABLE secretos (
         ON DELETE CASCADE
 );
 
+CREATE TABLE intentos_login (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(120) NOT NULL,
+    intentos INT DEFAULT 0,
+    bloqueado_hasta DATETIME NULL,
+    ultimo_intento DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 ALTER TABLE colaboraciones 
 ADD COLUMN resultado_final VARCHAR(255) NULL;
 

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sonaria - Panel Admin</title>
+  
+  <link rel="stylesheet" href="admin_panel.css">
+</head>
+<body>
+  <div id="header-container"></div>
+
+  <div id="admin-container">
+
+    <!-- =======================
+         SIDEBAR
+    ======================== -->
+    <aside id="sidebar">
+      <h2>Panel Admin</h2>
+      <button class="side-btn" onclick="mostrarSeccion('auditoria')">Auditoría</button>
+      <button class="side-btn" onclick="mostrarSeccion('metricas')">Métricas</button>
+      <button class="side-btn" onclick="mostrarSeccion('rectificaciones')">Rectificaciones</button>
+    </aside>
+
+    <!-- =========================
+         CONTENIDO PRINCIPAL
+    =========================== -->
+    <main id="contenido">
+
+      <!-- AUDITORÍA -->
+      <section id="seccion-auditoria" class="seccion" style="display:none">
+        <h2>Auditoría del sistema</h2>
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Usuario</th>
+              <th>Acción</th>
+              <th>Detalles</th>
+              <th>Fecha</th>
+              <th>IP</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-auditoria"></tbody>
+        </table>
+      </section>
+
+      <!-- MÉTRICAS -->
+      <section id="seccion-metricas" class="seccion" style="display:none">
+        <h2>Métricas del sistema</h2>
+
+        <button onclick="recalcularMetricas()">Recalcular métricas</button>
+
+        <div id="contenedor-metricas"></div>
+      </section>
+
+      <!-- RECTIFICACIONES -->
+      <section id="seccion-rectificaciones" class="seccion" style="display:none">
+        <h2>Solicitudes de rectificación</h2>
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Usuario</th>
+              <th>Campo</th>
+              <th>Anterior</th>
+              <th>Nuevo</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-rectificaciones"></tbody>
+        </table>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="header.js"></script>
+  <script src="admin_panel.js"></script>
+
+</body>
+</html>
