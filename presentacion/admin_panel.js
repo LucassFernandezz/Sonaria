@@ -121,6 +121,7 @@ async function cargarRectificaciones() {
   });
 }
 
+// futura funcionalidad aprobar o rechazar solicitudes
 async function aprobarRect(id) {
   if (!confirm("¿Aprobar la rectificación?")) return;
 
@@ -218,7 +219,7 @@ async function eliminarUsuario(id) {
 
 // === RESET PASS ===
 async function resetPass(id) {
-  const nueva = prompt("Nueva contraseña:");
+  const nueva = prompt("Nueva contraseña (mayor a 6 digitos):");
 
   if (!nueva) return;
 
@@ -236,7 +237,7 @@ async function resetPass(id) {
 
 // === CAMBIAR ROL ===
 async function cambiarRol(id) {
-  const nuevo = prompt("Nuevo rol: (admin / registrado / visitante");
+  const nuevo = prompt("Nuevo rol: (admin / registrado)");
 
   if (!nuevo) return;
 
