@@ -20,6 +20,7 @@
       <button class="side-btn" onclick="mostrarSeccion('auditoria')">Auditoría</button>
       <button class="side-btn" onclick="mostrarSeccion('metricas')">Métricas</button>
       <button class="side-btn" onclick="mostrarSeccion('rectificaciones')">Rectificaciones</button>
+      <button class="side-btn" onclick="mostrarSeccion('usuarios')">Usuarios</button>
     </aside>
 
     <!-- =========================
@@ -70,6 +71,23 @@
             </tr>
           </thead>
           <tbody id="tabla-rectificaciones"></tbody>
+        </table>
+      </section>
+
+      <!-- USUARIOS -->
+      <section id="seccion-usuarios" class="seccion" style="display:none">
+        <h2>Gestión de usuarios</h2>
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Email</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-usuarios"></tbody>
         </table>
       </section>
 

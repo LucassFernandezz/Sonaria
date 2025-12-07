@@ -22,8 +22,10 @@ def require_admin():
     return True, user, None
 
 
+
 # ======================================================
 # GET /admin/metricas/
+# → Obtener SOLO las últimas 3 métricas por tipo
 # ======================================================
 @metricas_bp.route("/", methods=["GET"])
 def obtener_metricas():
@@ -34,29 +36,48 @@ def obtener_metricas():
     user = user_or_resp
 
     conn = obtener_conexion()
+    cursor = conn.cursor(dictionary=True)
 
-    with conn.cursor(dictionary=True) as cursor:
+    # 1) Obtener los tipos disponibles
+    cursor.execute("SELECT DISTINCT tipo FROM metricas")
+    tipos = [fila["tipo"] for fila in cursor.fetchall()]
+
+    metricas_finales = []
+
+    # 2) Para cada tipo, traer solo las últimas 3
+    for tipo in tipos:
         cursor.execute("""
             SELECT id, tipo, valor, fecha_calculo
             FROM metricas
+            WHERE tipo = %s
             ORDER BY fecha_calculo DESC
-            LIMIT 20
-        """)
-        datos = cursor.fetchall()
+            LIMIT 3
+        """, (tipo,))
+        registros = cursor.fetchall()
+        metricas_finales.extend(registros)
 
+    cursor.close()
     conn.close()
+
+    metricas_finales = sorted(
+        metricas_finales,
+        key=lambda x: x["fecha_calculo"],
+        reverse=True
+    )
 
     registrar_evento(
         usuario_id=user["usuario_id"],
         accion="admin_ver_metricas",
-        detalles={"cant_metricas": len(datos)}
+        detalles={"metricas_mostradas": len(metricas_finales)}
     )
 
-    return jsonify({"ok": True, "metricas": datos})
+    return jsonify({"ok": True, "metricas": metricas_finales})
+
 
 
 # ======================================================
 # POST /admin/metricas/recalcular
+# Generar una nueva ejecución de métricas
 # ======================================================
 @metricas_bp.route("/recalcular", methods=["POST"])
 def recalcular_metricas():
@@ -93,7 +114,7 @@ def recalcular_metricas():
 
 
     # ----------------------------------------------
-    # MÉTRICA: PROYECTOS MÁS COLABORADOS
+    # MÉTRICA: PROYECTOS POPULARES
     # ----------------------------------------------
     cursor.execute("""
         SELECT p.id, p.titulo, COUNT(c.id) AS colaboraciones
@@ -144,6 +165,7 @@ def recalcular_metricas():
     conn.commit()
     cursor.close()
     conn.close()
+
 
     registrar_evento(
         usuario_id=user["usuario_id"],

@@ -16,6 +16,7 @@ from aplicacion.rutas.admin_metricas import metricas_bp
 from aplicacion.rutas.notificaciones import notificaciones_bp
 from aplicacion.rutas.rectificaciones import rectificaciones_bp
 from aplicacion.rutas.admin_rectificaciones import admin_rectificaciones_bp
+from aplicacion.rutas.admin_usuarios import admin_usuarios_bp
 
 # Servidor TCP
 from aplicacion.sockets.tcp_server import iniciar_servidor_tcp
@@ -57,6 +58,7 @@ def crear_app():
     app.register_blueprint(notificaciones_bp)
     app.register_blueprint(rectificaciones_bp) 
     app.register_blueprint(admin_rectificaciones_bp)
+    app.register_blueprint(admin_usuarios_bp)
 
 
     return app
