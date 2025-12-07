@@ -140,41 +140,6 @@ async function rechazarRect(id) {
 }
 
 
-
-// ========================================
-// 4) USUARIOS
-// ========================================
-async function cargarUsuarios() {
-  const res = await fetch("/admin/usuarios/");
-  const data = await res.json();
-
-  const tbody = document.getElementById("tabla-usuarios");
-  tbody.innerHTML = "";
-
-  if (!data.ok) return;
-
-  data.usuarios.forEach(u => {
-    const tr = document.createElement("tr");
-
-    tr.innerHTML = `
-      <td>${u.id}</td>
-      <td>${u.email}</td>
-      <td>${u.rol}</td>
-      <td>${u.estado}</td>
-      <td>
-        <button onclick="verInfo(${u.id})">Ver</button>
-        <button onclick="bloquearUsuario(${u.id})">Bloquear</button>
-        <button onclick="eliminarUsuario(${u.id})">Eliminar</button>
-        <button onclick="resetPass(${u.id})">Reset Pass</button>
-        <button onclick="cambiarRol(${u.id})">Cambiar Rol</button>
-      </td>
-    `;
-
-    tbody.appendChild(tr);
-  });
-}
-
-
 // ========================================
 // 4) USUARIOS
 // ========================================
@@ -198,7 +163,6 @@ async function cargarUsuarios() {
       <td>
         <button onclick="verInfo(${u.id})">Ver</button>
         <button onclick="bloquearUsuario(${u.id})">Bloquear/Activar</button>
-        <button onclick="eliminarUsuario(${u.id})">Eliminar</button>
         <button onclick="resetPass(${u.id})">Reset Pass</button>
         <button onclick="cambiarRol(${u.id})">Cambiar Rol</button>
       </td>
@@ -287,7 +251,7 @@ async function cambiarRol(id) {
   alert(data.mensaje);
   cargarUsuarios();
   
-  // 🔥 avisamos a todos los tabs del usuario bloqueado para que cierre sesión
+  // avisamos a todos los tabs del usuario bloqueado para que cierre sesión
   if (data.forzar_logout) {
     localStorage.setItem("logout_forzado", Date.now());
   }

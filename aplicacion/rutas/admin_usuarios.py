@@ -2,8 +2,8 @@
 from flask import Blueprint, jsonify, request
 from aplicacion.seguridad.sesiones import esta_autenticado, usuario_actual
 from aplicacion.seguridad.auditoria import registrar_evento
+from aplicacion.seguridad.hashing import generar_hash
 from persistencia.conexion import obtener_conexion
-from werkzeug.security import generate_password_hash
 
 admin_usuarios_bp = Blueprint("admin_usuarios_bp", __name__, url_prefix="/admin/usuarios")
 
@@ -190,14 +190,15 @@ def resetear_password(uid):
     if not nueva or len(nueva) < 6:
         return jsonify({"ok": False, "error": "Contraseña inválida"}), 400
 
-    hash_pw = generate_password_hash(nueva)
+    # 🔥 Generar hash bcrypt REAL
+    hash_pw = generar_hash(nueva)
 
     conn = obtener_conexion()
     cursor = conn.cursor()
 
     cursor.execute("""
         UPDATE usuarios
-        SET password = %s
+        SET password_hash = %s
         WHERE id = %s
     """, (hash_pw, uid))
 
