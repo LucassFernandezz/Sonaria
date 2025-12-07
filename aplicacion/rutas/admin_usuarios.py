@@ -142,8 +142,9 @@ def cambiar_rol(uid):
 
     nuevo_rol = request.json.get("rol")
 
-    if nuevo_rol not in ["usuario", "admin", "colaborador"]:
+    if nuevo_rol not in ["visitante", "registrado", "admin"]:
         return jsonify({"ok": False, "error": "Rol inválido"}), 400
+
 
     conn = obtener_conexion()
     cursor = conn.cursor()

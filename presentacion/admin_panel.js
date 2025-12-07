@@ -61,8 +61,8 @@ async function cargarMetricas() {
   const res = await fetch("/admin/metricas/");
   const data = await res.json();
 
-  const contenedor = document.getElementById("contenedor-metricas");
-  contenedor.innerHTML = "";
+  const cont = document.getElementById("contenedor-metricas");
+  cont.innerHTML = "";
 
   if (!data.ok) return;
 
@@ -76,20 +76,14 @@ async function cargarMetricas() {
       <p><b>Fecha:</b> ${m.fecha_calculo}</p>
     `;
 
-    contenedor.appendChild(div);
+    cont.appendChild(div);
   });
 }
 
-
-// Recalcular métricas
 async function recalcularMetricas() {
-  const res = await fetch("/admin/metricas/recalcular", {
-    method: "POST"
-  });
-
+  const res = await fetch("/admin/metricas/recalcular", { method: "POST" });
   const data = await res.json();
   alert(data.mensaje || "OK");
-
   cargarMetricas();
 }
 
@@ -128,24 +122,20 @@ async function cargarRectificaciones() {
 }
 
 async function aprobarRect(id) {
-  const res = await fetch(`/admin/rectificaciones/aprobar/${id}`, {
-    method: "POST"
-  });
+  if (!confirm("¿Aprobar la rectificación?")) return;
 
+  const res = await fetch(`/admin/rectificaciones/aprobar/${id}`, { method: "POST" });
   const data = await res.json();
-  alert(data.mensaje || "OK");
-
+  alert(data.mensaje);
   cargarRectificaciones();
 }
 
 async function rechazarRect(id) {
-  const res = await fetch(`/admin/rectificaciones/rechazar/${id}`, {
-    method: "POST"
-  });
+  if (!confirm("¿Rechazar la rectificación?")) return;
 
+  const res = await fetch(`/admin/rectificaciones/rechazar/${id}`, { method: "POST" });
   const data = await res.json();
-  alert(data.mensaje || "OK");
-
+  alert(data.mensaje);
   cargarRectificaciones();
 }
 
@@ -185,52 +175,108 @@ async function cargarUsuarios() {
 }
 
 
-// === ACCIONES ===
-async function verInfo(id) {
-  const res = await fetch(`/admin/usuarios/${id}`);
+// ========================================
+// 4) USUARIOS
+// ========================================
+async function cargarUsuarios() {
+  const res = await fetch("/admin/usuarios/");
   const data = await res.json();
-  alert(JSON.stringify(data, null, 2));
+
+  const tbody = document.getElementById("tabla-usuarios");
+  tbody.innerHTML = "";
+
+  if (!data.ok) return;
+
+  data.usuarios.forEach(u => {
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${u.id}</td>
+      <td>${u.email}</td>
+      <td>${u.rol}</td>
+      <td>${u.estado}</td>
+      <td>
+        <button onclick="verInfo(${u.id})">Ver</button>
+        <button onclick="bloquearUsuario(${u.id})">Bloquear/Activar</button>
+        <button onclick="eliminarUsuario(${u.id})">Eliminar</button>
+        <button onclick="resetPass(${u.id})">Reset Pass</button>
+        <button onclick="cambiarRol(${u.id})">Cambiar Rol</button>
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+  });
 }
 
+
+// === VER DETALLE ===
+async function verInfo(id) {
+  const res = await fetch(`/admin/usuarios/info/${id}`);
+
+  if (res.status === 404) {
+    alert("Usuario no encontrado");
+    return;
+  }
+
+  const data = await res.json();
+  alert(JSON.stringify(data.usuario, null, 2));
+}
+
+
+
+// === BLOQUEAR ===
 async function bloquearUsuario(id) {
-  if (!confirm("¿Bloquear este usuario?")) return;
+
+  const opcion = confirm("¿Deseas BLOQUEAR a este usuario?\n\nPresiona Cancelar para ACTIVARLO.");
+
+  const nuevoEstado = opcion ? "bloqueado" : "activo";
 
   const res = await fetch(`/admin/usuarios/bloquear/${id}`, {
-    method: "POST"
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ estado: nuevoEstado })
   });
 
   const data = await res.json();
-  alert(data.mensaje);
+  alert(data.mensaje || "OK");
+
   cargarUsuarios();
 }
 
+
+
+// === ELIMINAR (AÚN NO IMPLEMENTADO EN TU BACKEND) ===
 async function eliminarUsuario(id) {
-  if (!confirm("¿Eliminar este usuario PERMANENTEMENTE?")) return;
-
-  const res = await fetch(`/admin/usuarios/eliminar/${id}`, {
-    method: "DELETE"
-  });
-
-  const data = await res.json();
-  alert(data.mensaje);
-  cargarUsuarios();
+  alert("⚠ Esta función aún no está implementada en tu backend.");
 }
 
+
+
+// === RESET PASS ===
 async function resetPass(id) {
-  const res = await fetch(`/admin/usuarios/resetpass/${id}`, {
-    method: "POST"
+  const nueva = prompt("Nueva contraseña:");
+
+  if (!nueva) return;
+
+  const res = await fetch(`/admin/usuarios/reset_pass/${id}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nueva })
   });
 
   const data = await res.json();
   alert(data.mensaje);
 }
 
+
+
+// === CAMBIAR ROL ===
 async function cambiarRol(id) {
-  const nuevo = prompt("Nuevo rol: (admin / usuario)");
+  const nuevo = prompt("Nuevo rol: (admin / registrado / visitante");
 
   if (!nuevo) return;
 
-  const res = await fetch(`/admin/usuarios/rol/${id}`, {
+  const res = await fetch(`/admin/usuarios/cambiar_rol/${id}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ rol: nuevo })
