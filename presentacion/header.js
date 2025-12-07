@@ -82,3 +82,17 @@ async function configurarHeader() {
         btnAdmin.classList.remove("oculto");
     }
 }
+
+// ========================================
+// ESCUCHA GLOBAL — Logout forzado
+// ========================================
+window.addEventListener("storage", (e) => {
+    if (e.key === "logout_forzado") {
+
+        // Mostrar aviso
+        alert("Tu cuenta fue bloqueada por un administrador.");
+
+        // Redirigir a login
+        window.location.href = "login.html";
+    }
+});

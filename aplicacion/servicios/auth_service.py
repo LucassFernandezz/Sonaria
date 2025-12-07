@@ -55,7 +55,7 @@ class AuthService:
 
 
     # ============================================================
-    # LOGIN CON BLOQUEO E INTENTOS
+    # LOGIN CON BLOQUEO E INTENTOS + ESTADO (activo/bloqueado)
     # ============================================================
     @staticmethod
     def login(email, password):
@@ -66,7 +66,32 @@ class AuthService:
         ahora = datetime.now()
 
         # --------------------------------------------------------------------
-        # 1) OBTENER ESTADO DE INTENTOS PREVIOS
+        # 1) OBTENER ESTADO DEL USUARIO (activo / bloqueado)
+        # --------------------------------------------------------------------
+        cursor.execute("""
+            SELECT id, email, password_hash, rol, estado
+            FROM usuarios
+            WHERE email = %s
+        """, (email,))
+        usuario = cursor.fetchone()
+
+        # Si no existe el usuario → error normal
+        if not usuario:
+            return {"ok": False, "error": "Email o contraseña incorrectos"}
+
+        # --------------------------------------------------------------------
+        # 🚫 SI ESTÁ BLOQUEADO POR EL ADMIN → NO PERMITIR LOGIN
+        # --------------------------------------------------------------------
+        if usuario["estado"] == "bloqueado":
+            registrar_evento(
+                usuario_id=usuario["id"],
+                accion="login_usuario_bloqueado",
+                detalles={"email": email}
+            )
+            return {"ok": False, "error": "Cuenta bloqueada por el administrador"}
+
+        # --------------------------------------------------------------------
+        # 2) OBTENER ESTADO DE INTENTOS PREVIOS (tu tabla intentos_login)
         # --------------------------------------------------------------------
         cursor.execute("""
             SELECT intentos, bloqueado_hasta
@@ -75,37 +100,24 @@ class AuthService:
         """, (email,))
         intento = cursor.fetchone()
 
-        # SI ESTÁ BLOQUEADO, SALIR
+        # Si está bloqueado temporalmente
         if intento and intento["bloqueado_hasta"] and intento["bloqueado_hasta"] > ahora:
             segundos = int((intento["bloqueado_hasta"] - ahora).total_seconds())
 
             registrar_evento(
-                usuario_id=None,
-                accion="login_bloqueado",
-                detalles={"email": email, "segundos_restantes": segundos}
+                usuario_id=usuario["id"],
+                accion="login_bloqueado_temporal",
+                detalles={"segundos_restantes": segundos}
             )
-
-            cursor.close()
-            conn.close()
 
             return {"ok": False, "error": f"Cuenta bloqueada. Espera {segundos} segundos."}
 
         # --------------------------------------------------------------------
-        # 2) BUSCAR USUARIO
+        # 3) VALIDAR CONTRASEÑA
         # --------------------------------------------------------------------
-        cursor.execute("""
-            SELECT id, email, password_hash, rol
-            FROM usuarios
-            WHERE email = %s
-        """, (email,))
-        usuario = cursor.fetchone()
+        if not verificar_hash(password, usuario["password_hash"]):
 
-        # --------------------------------------------------------------------
-        # 3) SI FALTA USUARIO O CONTRASEÑA INCORRECTA → FALLA
-        # --------------------------------------------------------------------
-        if not usuario or not verificar_hash(password, usuario["password_hash"]):
-
-            # Registrar (o incrementar) intentos fallidos
+            # Registrar incrementos
             if not intento:
                 cursor.execute("""
                     INSERT INTO intentos_login (email, intentos, ultimo_intento)
@@ -115,48 +127,42 @@ class AuthService:
                 nuevos = intento["intentos"] + 1
                 bloqueo = None
 
-                # ¿Llega al máximo?
                 if nuevos >= MAX_INTENTOS:
                     bloqueo = ahora + timedelta(minutes=BLOQUEO_MINUTOS)
 
                 cursor.execute("""
                     UPDATE intentos_login
-                    SET intentos = %s,
-                        ultimo_intento = NOW(),
-                        bloqueado_hasta = %s
-                    WHERE email = %s
+                    SET intentos=%s, ultimo_intento=NOW(), bloqueado_hasta=%s
+                    WHERE email=%s
                 """, (nuevos, bloqueo, email))
 
             conn.commit()
 
             registrar_evento(
-                usuario_id=None,
+                usuario_id=usuario["id"],
                 accion="login_fallido",
                 detalles={"email": email}
             )
 
-            cursor.close()
-            conn.close()
-
             return {"ok": False, "error": "Email o contraseña incorrectos"}
 
         # --------------------------------------------------------------------
-        # 4) LOGIN CORRECTO → RESET INTENTOS
+        # 4) LOGIN CORRECTO → RESET DE INTENTOS
         # --------------------------------------------------------------------
-        cursor.execute("DELETE FROM intentos_login WHERE email = %s", (email,))
+        cursor.execute("DELETE FROM intentos_login WHERE email=%s", (email,))
         conn.commit()
 
         registrar_evento(
             usuario_id=usuario["id"],
             accion="login_exitoso",
-            detalles={"email": usuario["email"]}
-        )
-
-        # Devolver usuario sin hash
+            detalles={"email": usuario["email"]})
+        
+        # Construcción de datos a devolver
         datos_usuario = {
             "id": usuario["id"],
             "email": usuario["email"],
-            "rol": usuario["rol"]
+            "rol": usuario["rol"],
+            "estado": usuario["estado"]
         }
 
         cursor.close()

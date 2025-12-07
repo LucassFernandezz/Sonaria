@@ -126,7 +126,13 @@ def bloquear_usuario(uid):
         detalles={"usuario": uid, "nuevo_estado": nuevo_estado}
     )
 
-    return jsonify({"ok": True, "mensaje": "Estado actualizado"})
+    return jsonify({
+        "ok": True,
+        "mensaje": "Usuario bloqueado",
+        "forzar_logout": True,   # 🔥 para indicarle al frontend que expulse al usuario
+        "usuario_id": uid
+    })
+
 
 
 

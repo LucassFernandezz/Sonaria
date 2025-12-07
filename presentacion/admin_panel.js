@@ -283,6 +283,12 @@ async function cambiarRol(id) {
   });
 
   const data = await res.json();
+  
   alert(data.mensaje);
   cargarUsuarios();
+  
+  // 🔥 avisamos a todos los tabs del usuario bloqueado para que cierre sesión
+  if (data.forzar_logout) {
+    localStorage.setItem("logout_forzado", Date.now());
+  }
 }
