@@ -4,6 +4,7 @@ from persistencia.conexion import obtener_conexion
 from werkzeug.utils import secure_filename
 from aplicacion.seguridad.auditoria import registrar_evento
 from aplicacion.seguridad.cifrado import cifrar, descifrar
+from aplicacion.sockets.tcp_client import enviar_notificacion_tcp
 import os
 import time
 
@@ -114,6 +115,7 @@ def aceptar_solicitud(colab_id):
         conn.commit()
 
     conn.close()
+    enviar_notificacion_tcp(f"Solicitud aceptada | colab_id={colab_id} | usuario={uid}")
 
     registrar_evento(uid, "aceptar_colab", {"colab_id": colab_id})  # auditoría
 
@@ -156,6 +158,7 @@ def rechazar_solicitud(colab_id):
         conn.commit()
 
     conn.close()
+    enviar_notificacion_tcp(f"Solicitud rechazada | colab_id={colab_id} | usuario={uid}")
 
     registrar_evento(uid, "rechazar_colab", {"colab_id": colab_id})  # auditoría
 
@@ -241,7 +244,7 @@ def obtener_detalle_colaboracion(colab_id):
 def subir_take(colab_id):
 
     if not esta_autenticado():
-        registrar_evento(None, "subir_take_denegado", {"colab_id": colab_id})  # auditoría
+        registrar_evento(None, "subir_take_denegado", {"colab_id": colab_id})
         return jsonify({"ok": False, "error": "No autenticado"}), 401
 
     user = usuario_actual()
@@ -251,16 +254,18 @@ def subir_take(colab_id):
     # Validación archivo
     # -------------------------------
     if "archivo" not in request.files:
-        registrar_evento(uid, "subir_take_error", {"colab_id": colab_id, "motivo": "archivo_no_enviado"})  # auditoría
+        registrar_evento(uid, "subir_take_error",
+                         {"colab_id": colab_id, "motivo": "archivo_no_enviado"})
         return jsonify({"ok": False, "error": "Archivo no enviado"}), 400
 
     archivo = request.files["archivo"]
 
     if archivo.filename == "":
-        registrar_evento(uid, "subir_take_error", {"colab_id": colab_id, "motivo": "nombre_vacio"})  # auditoría
+        registrar_evento(uid, "subir_take_error",
+                         {"colab_id": colab_id, "motivo": "nombre_vacio"})
         return jsonify({"ok": False, "error": "Nombre inválido"}), 400
 
-    # Guardado físico
+    # Guardado físico del archivo
     filename = secure_filename(str(int(time.time())) + "_" + archivo.filename)
     ruta = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
     archivo.save(ruta)
@@ -269,32 +274,37 @@ def subir_take(colab_id):
 
     conn = obtener_conexion()
     with conn.cursor(dictionary=True) as cursor:
-        # --- CHEQUEO 1: Colaboración existe ---
+
+        # --- CHEQUEO 1: La colaboración existe y obtener campos necesarios ---
         cursor.execute("""
-            SELECT proyecto_id, usuario_colaborador_id
+            SELECT proyecto_id, usuario_colaborador_id, estado
             FROM colaboraciones
-            WHERE id = %s AND estado = 'aceptada'
+            WHERE id = %s
         """, (colab_id,))
         fila = cursor.fetchone()
 
         if not fila:
-            registrar_evento(uid, "subir_take_error", {"colab_id": colab_id, "motivo": "colab_no_existe"})  # auditoría
+            registrar_evento(uid, "subir_take_error",
+                             {"colab_id": colab_id, "motivo": "colab_no_existe"})
             return jsonify({"ok": False, "error": "Colaboración inexistente"}), 404
 
-        # --- CHEQUEO 2: Colaboración está aceptada ---
+        # --- CHEQUEO 2: La colaboración debe estar aceptada ---
         if fila["estado"] != "aceptada":
             registrar_evento(uid, "subir_take_error",
                              {"colab_id": colab_id, "motivo": "colab_no_aceptada"})
             return jsonify({"ok": False, "error": "La colaboración no está aceptada"}), 403
 
-        cursor.execute("SELECT usuario_id FROM proyectos_audio WHERE id = %s", (fila["proyecto_id"],))
+        # Obtener dueño del proyecto
+        cursor.execute("SELECT usuario_id FROM proyectos_audio WHERE id = %s",
+                       (fila["proyecto_id"],))
         dueno = cursor.fetchone()["usuario_id"]
 
-        # --- CHEQUEO 3: El usuario participa de la colaboración ---
+        # --- CHEQUEO 3: El usuario debe ser dueño o colaborador ---
         if uid not in (dueno, fila["usuario_colaborador_id"]):
-            registrar_evento(uid, "subir_take_denegado", {"colab_id": colab_id})  # auditoría
+            registrar_evento(uid, "subir_take_denegado", {"colab_id": colab_id})
             return jsonify({"ok": False, "error": "No autorizado"}), 403
 
+        # Insertar take
         cursor.execute("""
             INSERT INTO takes (colaboracion_id, archivo_audio, comentarios)
             VALUES (%s, %s, %s)
@@ -304,7 +314,8 @@ def subir_take(colab_id):
 
     conn.close()
 
-    registrar_evento(uid, "subir_take", {"colab_id": colab_id, "archivo": filename})  # auditoría
+    registrar_evento(uid, "subir_take", {"colab_id": colab_id, "archivo": filename})
+    enviar_notificacion_tcp(f"Nuevo take subido | colab_id={colab_id} | usuario={uid}")
 
     return jsonify({"ok": True, "mensaje": "Take subido correctamente"})
 

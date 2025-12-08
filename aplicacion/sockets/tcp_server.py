@@ -1,5 +1,8 @@
 import socket
 
+# ============================================================
+# Servidor TCP (corre en un hilo aparte desde app.py)
+# ============================================================
 def iniciar_servidor_tcp():
     host = "127.0.0.1"
     port = 5050
