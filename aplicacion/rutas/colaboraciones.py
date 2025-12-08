@@ -247,6 +247,9 @@ def subir_take(colab_id):
     user = usuario_actual()
     uid = user["usuario_id"]
 
+    # -------------------------------
+    # Validación archivo
+    # -------------------------------
     if "archivo" not in request.files:
         registrar_evento(uid, "subir_take_error", {"colab_id": colab_id, "motivo": "archivo_no_enviado"})  # auditoría
         return jsonify({"ok": False, "error": "Archivo no enviado"}), 400
@@ -257,6 +260,7 @@ def subir_take(colab_id):
         registrar_evento(uid, "subir_take_error", {"colab_id": colab_id, "motivo": "nombre_vacio"})  # auditoría
         return jsonify({"ok": False, "error": "Nombre inválido"}), 400
 
+    # Guardado físico
     filename = secure_filename(str(int(time.time())) + "_" + archivo.filename)
     ruta = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
     archivo.save(ruta)
@@ -265,7 +269,7 @@ def subir_take(colab_id):
 
     conn = obtener_conexion()
     with conn.cursor(dictionary=True) as cursor:
-
+        # --- CHEQUEO 1: Colaboración existe ---
         cursor.execute("""
             SELECT proyecto_id, usuario_colaborador_id
             FROM colaboraciones
@@ -277,9 +281,16 @@ def subir_take(colab_id):
             registrar_evento(uid, "subir_take_error", {"colab_id": colab_id, "motivo": "colab_no_existe"})  # auditoría
             return jsonify({"ok": False, "error": "Colaboración inexistente"}), 404
 
+        # --- CHEQUEO 2: Colaboración está aceptada ---
+        if fila["estado"] != "aceptada":
+            registrar_evento(uid, "subir_take_error",
+                             {"colab_id": colab_id, "motivo": "colab_no_aceptada"})
+            return jsonify({"ok": False, "error": "La colaboración no está aceptada"}), 403
+
         cursor.execute("SELECT usuario_id FROM proyectos_audio WHERE id = %s", (fila["proyecto_id"],))
         dueno = cursor.fetchone()["usuario_id"]
 
+        # --- CHEQUEO 3: El usuario participa de la colaboración ---
         if uid not in (dueno, fila["usuario_colaborador_id"]):
             registrar_evento(uid, "subir_take_denegado", {"colab_id": colab_id})  # auditoría
             return jsonify({"ok": False, "error": "No autorizado"}), 403
