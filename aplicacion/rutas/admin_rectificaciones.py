@@ -3,6 +3,7 @@ from flask import Blueprint, request, jsonify
 from aplicacion.seguridad.sesiones import esta_autenticado, usuario_actual
 from aplicacion.seguridad.auditoria import registrar_evento
 from persistencia.conexion import obtener_conexion
+from aplicacion.seguridad.cifrado import cifrar
 
 admin_rectificaciones_bp = Blueprint("admin_rectificaciones_bp", __name__, url_prefix="/admin/rectificaciones")
 
@@ -83,13 +84,21 @@ def aprobar_rectificacion(rect_id):
         conn.close()
         return jsonify({"ok": False, "error": "Rectificación no encontrada"}), 404
 
-    # aplicar cambio: solo perfil_artistico en este ejemplo
-    # puedes extenderlo a otras tablas
+
+    # ------------------------------------------------------
+    # Si el campo es nombre_artistico → cifrar antes
+    # ------------------------------------------------------
+    if rect["campo"] == "nombre_artistico":
+        valor_final = cifrar(rect["valor_nuevo"])
+    else:
+        valor_final = rect["valor_nuevo"]
+
+    # aplicar cambio
     cursor.execute(f"""
         UPDATE perfiles_artisticos
         SET {rect['campo']} = %s
         WHERE usuario_id = %s
-    """, (rect["valor_nuevo"], rect["usuario_id"]))
+    """, (valor_final, rect["usuario_id"]))
 
     # marcar rectificación como aprobada
     cursor.execute("""

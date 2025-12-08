@@ -43,7 +43,10 @@ async function cargarAudios() {
                 </audio>
 
                 <div class="meta-row">
-                    <small class="autor">Subido por: ${audio.nombre_artistico ? audio.nombre_artistico : audio.email}</small>
+                    <small class="autor">Subido por: ${audio.nombre_artistico && !audio.nombre_artistico.startsWith("gAAAAA") 
+                        ? audio.nombre_artistico 
+                        : audio.email}
+                    </small>
                     <small><strong>Se necesita:</strong> ${audio.necesita || "—"}</small>
                 </div>
             `;

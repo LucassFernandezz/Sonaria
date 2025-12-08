@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from aplicacion.seguridad.sesiones import esta_autenticado, usuario_actual
 from aplicacion.servicios.perfil_services import PerfilService
+from aplicacion.seguridad.cifrado import descifrar
 
 perfiles_bp = Blueprint("perfiles_bp", __name__, url_prefix="/perfiles")
 

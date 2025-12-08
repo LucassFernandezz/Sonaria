@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 import os
 from werkzeug.utils import secure_filename
-
+from aplicacion.seguridad.cifrado import descifrar
 from aplicacion.seguridad.sesiones import esta_autenticado, usuario_actual
 from aplicacion.servicios.proyecto_services import ProyectoService
 from aplicacion.servicios.logger import registrar_evento    # 🟢 AUDITORÍA
@@ -92,7 +92,7 @@ def crear_proyecto():
 # =====================================================
 @proyectos_bp.route("/all", methods=["GET"])
 def obtener_audios():
-
+    print(" >>> EJECUTANDO /proyectos/all <<<")
     try:
         conn = obtener_conexion()
         with conn.cursor(dictionary=True) as cursor:
@@ -118,6 +118,20 @@ def obtener_audios():
             audios = cursor.fetchall()
 
         conn.close()
+
+        for a in audios:
+            if a["nombre_artistico"]:
+                print("ANTES:", a["nombre_artistico"])
+                try:
+                    plano = descifrar(a["nombre_artistico"])
+                    print("DESPUÉS:", plano)
+                    a["nombre_artistico"] = plano
+                except Exception as e:
+                    print("ERROR DESCIFRANDO:", e)
+                    a["nombre_artistico"] = None
+
+
+
 
         return jsonify({"ok": True, "audios": audios})
 
@@ -168,6 +182,9 @@ def obtener_proyecto(proyecto_id):
 
             if not proyecto:
                 return jsonify({"ok": False, "error": "Proyecto no encontrado"}), 404
+
+            if proyecto["nombre_artistico"]:
+                proyecto["nombre_artistico"] = descifrar(proyecto["nombre_artistico"])
 
             # 2) Saber si el usuario logueado es dueño
             proyecto["es_duenio"] = (user_id == proyecto["usuario_id"])
@@ -340,6 +357,11 @@ def proyectos_colaborando():
         """, (uid,))
 
         proyectos = cursor.fetchall()
+
+    for p in proyectos:
+        if p["dueno_nombre"]:
+            p["dueno_nombre"] = descifrar(p["dueno_nombre"])
+
 
     conn.close()
 

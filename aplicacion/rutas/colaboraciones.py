@@ -3,6 +3,7 @@ from aplicacion.seguridad.sesiones import esta_autenticado, usuario_actual
 from persistencia.conexion import obtener_conexion
 from werkzeug.utils import secure_filename
 from aplicacion.seguridad.auditoria import registrar_evento
+from aplicacion.seguridad.cifrado import cifrar, descifrar
 import os
 import time
 
@@ -52,6 +53,12 @@ def obtener_solicitudes(proyecto_id):
         """, (proyecto_id,))
 
         solicitudes = cursor.fetchall()
+
+        # Descifrar nombre artístico
+        for s in solicitudes:
+            if s["nombre_artistico"]:
+                s["nombre_artistico"] = descifrar(s["nombre_artistico"])
+
 
     conn.close()
 
@@ -195,6 +202,13 @@ def obtener_detalle_colaboracion(colab_id):
         """, (colab_id,))
         
         colab = cursor.fetchone()
+
+        if colab:
+            if colab["dueno_artistico"]:
+                colab["dueno_artistico"] = descifrar(colab["dueno_artistico"])
+            if colab["colaborador_artistico"]:
+                colab["colaborador_artistico"] = descifrar(colab["colaborador_artistico"])
+
 
         if not colab:
             registrar_evento(uid, "detalle_colab_error", {"colab_id": colab_id, "motivo": "no_existe"})  # auditoría
