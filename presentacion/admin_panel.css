@@ -328,3 +328,180 @@
     color: #d44f7b; /* rosa oscuro elegante */
     font-weight: 700;
 }
+
+/* ============================
+   RESET GENERAL
+============================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #ffe0b3;
+  color: #000;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================
+   LAYOUT GENERAL
+============================ */
+#admin-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+/* ============================
+   SIDEBAR
+============================ */
+#sidebar {
+  width: 250px;
+  background: #ffb6c9;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  border-right: 4px solid #ff69b4;
+  min-height: 100vh;
+}
+
+#sidebar h2 {
+  color: white;
+  font-size: 22px;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.side-btn {
+  background: white;
+  border: 2px solid #ff69b4;
+  color: #ff69b4;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.side-btn:hover {
+  background: #ff69b4;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* ============================
+   CONTENIDO PRINCIPAL
+============================ */
+#contenido {
+  flex: 1;
+  padding: 30px;
+}
+
+/* ============================
+   TÍTULOS DE SECCIÓN
+============================ */
+.seccion h2 {
+  font-size: 26px;
+  color: #d44f7b;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* ============================
+   TABLAS GENERALES
+============================ */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  background: #fff7ee;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tabla th {
+  background: #ffb6c9;
+  padding: 12px;
+  font-size: 15px;
+  color: white;
+  border-bottom: 2px solid #ff69b4;
+}
+
+.tabla td {
+  padding: 12px;
+  border-bottom: 1px solid #ffcddd;
+  font-size: 14px;
+}
+
+.tabla tr:hover {
+  background: #ffe5ef;
+}
+
+/* ============================
+   BOTONES DE ACCIÓN EN TABLAS
+============================ */
+.tabla button {
+  padding: 6px 10px;
+  font-size: 13px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-right: 5px;
+  transition: 0.2s ease;
+}
+
+.tabla button:hover {
+  transform: translateY(-2px);
+}
+
+.tabla button:nth-child(1) { background: #8aff9c; }
+.tabla button:nth-child(2) { background: #ff8f8f; }
+.tabla button:nth-child(3) { background: #90c8ff; }
+.tabla button:nth-child(4) { background: #ffdd6e; }
+
+/* ============================
+   BLOQUES DE MÉTRICAS
+============================ */
+.bloque-metrica {
+  background: #fff7ee;
+  border: 2px solid #ffb6c9;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.bloque-metrica h3 {
+  color: #d44f7b;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* ============================
+   BOTÓN RE-CALCULAR MÉTRICAS
+============================ */
+#seccion-metricas button {
+  background: #ff69b4;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-size: 16px;
+  transition: 0.2s ease;
+}
+
+#seccion-metricas button:hover {
+  background: #d44f7b;
+  transform: translateY(-2px);
+}
