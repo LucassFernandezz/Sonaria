@@ -328,3 +328,139 @@
     color: #d44f7b; /* rosa oscuro elegante */
     font-weight: 700;
 }
+
+ /* ======================================================
+ * BOTONES LOGIN Y REGISTER
+ * ====================================================== */
+
+/* Estilos base compartidos para ambos botones */
+.login-link,
+.register-link {
+  text-decoration: none;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 8px 16px;       /* Espacio interno cómodo */
+  border-radius: 20px;     /* Bordes redondeados tipo "pastilla" */
+  border: 2px solid #ff69b4; /* Mismo rosa fuerte del borde del header */
+  transition: all 0.2s ease; /* Suaviza el efecto hover */
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Estilo específico para LOGIN (Botón tipo "Ghost" o fondo blanco) */
+.login-link {
+  background-color: white;
+  color: #ff69b4; /* Texto rosa */
+  margin-right: 8px; /* Separación con el botón de registro */
+}
+
+/* Efecto Hover para Login */
+.login-link:hover {
+  background-color: #fff0f5; /* Un rosa muy pálido al pasar el mouse */
+  transform: translateY(-2px); /* Pequeño salto hacia arriba igual que los iconos */
+  color: #e0529e;
+}
+
+/* Estilo específico para REGISTER (Botón sólido para destacar) */
+.register-link {
+  background-color: #ff69b4; /* Fondo rosa fuerte */
+  color: white;              /* Texto blanco */
+}
+
+/* Efecto Hover para Register */
+.register-link:hover {
+  background-color: #e0529e; /* Oscurece un poco el rosa */
+  border-color: #e0529e;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+
+/* ======================================================
+   TARJETAS DE SOLICITUDES
+   ====================================================== */
+
+.solicitud-item {
+    background: #fff7ee;
+    border: 2px solid #ffb6c9;
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    text-align: left;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.solicitud-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+.solicitud-item p {
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+/* Contenedor de botones */
+.acciones {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+/* ======================================================
+   BOTONES DE SOLICITUDES
+   ====================================================== */
+
+.btn-aceptar,
+.btn-rechazar,
+.btn-entrar {
+    padding: 8px 18px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid #ff69b4;
+    transition: all 0.15s ease;
+}
+
+/* Aceptar (verde pastel) */
+.btn-aceptar {
+    background-color: #c2f0c2;
+    color: #1b6e1b;
+    border-color: #6fcf70;
+}
+
+.btn-aceptar:hover {
+    background-color: #a8e6a8;
+    transform: translateY(-2px);
+}
+
+/* Rechazar (rojo suave) */
+.btn-rechazar {
+    background-color: #ffd1d1;
+    color: #b02f2f;
+    border-color: #e88f8f;
+}
+
+.btn-rechazar:hover {
+    background-color: #ffbaba;
+    transform: translateY(-2px);
+}
+
+/* Entrar (rosa Sonaria) */
+.btn-entrar {
+    background-color: #ff69b4;
+    color: white;
+    border-color: #ff69b4;
+}
+
+.btn-entrar:hover {
+    background-color: #e0529e;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+}

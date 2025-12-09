@@ -195,3 +195,148 @@
     font-size: 0.9em;
     margin-top: auto;
   }
+
+  /* ======================================================
+ * BOTONES LOGIN Y REGISTER
+ * ====================================================== */
+
+/* Estilos base compartidos para ambos botones */
+.login-link,
+.register-link {
+  text-decoration: none;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 8px 16px;       /* Espacio interno cómodo */
+  border-radius: 20px;     /* Bordes redondeados tipo "pastilla" */
+  border: 2px solid #ff69b4; /* Mismo rosa fuerte del borde del header */
+  transition: all 0.2s ease; /* Suaviza el efecto hover */
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Estilo específico para LOGIN (Botón tipo "Ghost" o fondo blanco) */
+.login-link {
+  background-color: white;
+  color: #ff69b4; /* Texto rosa */
+  margin-right: 8px; /* Separación con el botón de registro */
+}
+
+/* Efecto Hover para Login */
+.login-link:hover {
+  background-color: #fff0f5; /* Un rosa muy pálido al pasar el mouse */
+  transform: translateY(-2px); /* Pequeño salto hacia arriba igual que los iconos */
+  color: #e0529e;
+}
+
+/* Estilo específico para REGISTER (Botón sólido para destacar) */
+.register-link {
+  background-color: #ff69b4; /* Fondo rosa fuerte */
+  color: white;              /* Texto blanco */
+}
+
+/* Efecto Hover para Register */
+.register-link:hover {
+  background-color: #e0529e; /* Oscurece un poco el rosa */
+  border-color: #e0529e;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ======================================================
+   ESTILOS PARA LA PÁGINA DE PROYECTO (NUEVOS)
+   ====================================================== */
+
+/* Contenedor general */
+#proyecto-main .container {
+    background-color: #fff7ee;   /* beige pastel */
+    border: 3px solid #ff69b4;   /* rosa fuerte */
+    border-radius: 18px;
+    padding: 30px;
+    max-width: 850px;
+    margin: 30px auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.10);
+}
+
+/* Título del proyecto */
+#titulo-proyecto {
+    color: #d44f7b; /* rosa oscuro */
+    font-size: 2.2em;
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+
+/* Bloque de info */
+#proyecto-info {
+    text-align: left;
+    font-size: 17px;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Subtítulo "Descripción" */
+#proyecto-info h3 {
+    color: #ff69b4;
+    font-size: 20px;
+    margin-top: 25px;
+    margin-bottom: 8px;
+}
+
+/* Reproductor de audio */
+#audio-proyecto {
+    width: 100%;
+    margin: 15px 0 25px 0;
+    border: 2px solid #ffa8d5;
+    border-radius: 12px;
+    background-color: #ffe6f1;
+}
+
+/* Contenedor del botón */
+#acciones {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+}
+
+/* =============================
+   BOTÓN DINÁMICO: .btn-accion
+   ============================= */
+.btn-accion {
+    background-color: #ff69b4;
+    color: white;
+    border: 2px solid #d44f7b;
+    padding: 12px 25px;
+    font-size: 17px;
+    font-weight: bold;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.1);
+}
+
+/* Hover */
+.btn-accion:hover:not(:disabled) {
+    background-color: #e0529e;
+    border-color: #e0529e;
+    transform: translateY(-2px);
+}
+
+/* Botón deshabilitado */
+.btn-accion:disabled {
+    background-color: #ffcce5;
+    border-color: #f3a4c7;
+    color: #555;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Mensaje de rechazo */
+#acciones p {
+    text-align: center;
+    color: #b00000;
+    font-weight: bold;
+    background-color: #ffe5e5;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #ffb3b3;
+}

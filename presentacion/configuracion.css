@@ -328,3 +328,124 @@
     color: #d44f7b; /* rosa oscuro elegante */
     font-weight: 700;
 }
+
+/* ======================================================
+   CONTENEDOR PRINCIPAL (MAIN)
+   ====================================================== */
+
+main {
+    background: #fffaf3; /* pastel suave */
+    border: 2px solid #ffb6c9;
+    border-radius: 18px;
+    padding: 30px;
+    margin-top: 40px;
+    max-width: 700px !important;
+    text-align: left;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+/* Títulos */
+main h1 {
+    font-size: 2.2em;
+    color: #d44f7b;
+    text-align: center;
+}
+
+main h2 {
+    color: #d44f7b;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+/* Texto del email */
+#user-email {
+    font-size: 16px;
+    color: #444;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* ======================================================
+   BOTÓN CERRAR SESIÓN
+   ====================================================== */
+
+#logout-btn {
+    background: #ff4f70 !important;
+    border-radius: 10px !important;
+    border: 2px solid #ffb6c9 !important;
+    padding: 10px 16px !important;
+    font-weight: bold;
+    transition: 0.15s ease;
+}
+
+#logout-btn:hover {
+    background: #e63a59 !important;
+    transform: translateY(-2px);
+}
+
+/* Mensaje después del logout */
+#mensaje {
+    font-size: 15px;
+    margin-top: 12px;
+}
+
+/* ======================================================
+   FORMULARIO DE RECTIFICACIÓN
+   ====================================================== */
+
+#rectificacion-form {
+    margin-top: 15px;
+    padding: 15px;
+    background: #fff4e6;
+    border-radius: 12px;
+    border: 2px solid #ffd0df;
+}
+
+/* Labels */
+#rectificacion-form label {
+    font-weight: bold;
+    color: #444;
+}
+
+/* Select + Textareas */
+#rectificacion-form select,
+#rectificacion-form textarea {
+    border: 2px solid #ffb6c9 !important;
+    border-radius: 10px;
+    background: #fffdf9;
+    padding: 10px;
+    font-size: 14px;
+    width: 100%;
+    resize: none;
+    transition: 0.15s ease;
+}
+
+#rectificacion-form select:focus,
+#rectificacion-form textarea:focus {
+    outline: none;
+    border-color: #d44f7b !important;
+    box-shadow: 0 0 3px rgba(212, 79, 123, 0.4);
+}
+
+/* Botón enviar */
+#rectificacion-form button[type="submit"] {
+    background: #d44f7b !important;
+    border: 2px solid #ffb6c9 !important;
+    border-radius: 10px !important;
+    color: white !important;
+    padding: 10px 16px !important;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+#rectificacion-form button[type="submit"]:hover {
+    background: #b83d68 !important;
+    transform: translateY(-2px);
+}
+
+/* Mensaje del formulario */
+#rectificacion-msg {
+    margin-top: 10px;
+    font-size: 15px;
+}

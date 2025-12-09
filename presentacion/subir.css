@@ -196,183 +196,226 @@
     margin-top: auto;
   }
 
-/* ============================
-   PERFIL CARD
-============================ */
+  /* ======================================================
+ * BOTONES LOGIN Y REGISTER
+ * ====================================================== */
 
-.perfil-main {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.perfil-titulo {
-  font-size: 2.2em;
-  margin-bottom: 25px;
+/* Estilos base compartidos para ambos botones */
+.login-link,
+.register-link {
+  text-decoration: none;
+  font-family: 'Arial', sans-serif;
   font-weight: bold;
+  font-size: 14px;
+  padding: 8px 16px;       /* Espacio interno cómodo */
+  border-radius: 20px;     /* Bordes redondeados tipo "pastilla" */
+  border: 2px solid #ff69b4; /* Mismo rosa fuerte del borde del header */
+  transition: all 0.2s ease; /* Suaviza el efecto hover */
+  display: inline-block;
+  cursor: pointer;
 }
 
-.perfil-card {
-  background: #fff4e6;
-  border: 2px solid #d6a24d;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
-  border-radius: 12px;
-  padding: 25px;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
+/* Estilo específico para LOGIN (Botón tipo "Ghost" o fondo blanco) */
+.login-link {
+  background-color: white;
+  color: #ff69b4; /* Texto rosa */
+  margin-right: 8px; /* Separación con el botón de registro */
 }
 
-.campo {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-  margin-bottom: 18px;
+/* Efecto Hover para Login */
+.login-link:hover {
+  background-color: #fff0f5; /* Un rosa muy pálido al pasar el mouse */
+  transform: translateY(-2px); /* Pequeño salto hacia arriba igual que los iconos */
+  color: #e0529e;
 }
 
-.campo label {
-  font-weight: bold;
-  margin-bottom: 5px;
+/* Estilo específico para REGISTER (Botón sólido para destacar) */
+.register-link {
+  background-color: #ff69b4; /* Fondo rosa fuerte */
+  color: white;              /* Texto blanco */
 }
 
-.campo input,
-.campo textarea,
-.campo select {
+/* Efecto Hover para Register */
+.register-link:hover {
+  background-color: #e0529e; /* Oscurece un poco el rosa */
+  border-color: #e0529e;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ======================================================
+   TARJETAS DE AUDIOS EN HOME
+   ====================================================== */
+
+.lista-audios {
+  margin-top: 35px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
   padding: 10px;
-  border: 2px solid #d6a24d;
-  border-radius: 8px;
-  background: #fffdf8;
-  font-size: 15px;
 }
 
-.campo input:disabled,
-.campo textarea:disabled,
-.campo select:disabled {
-  background: #f3e7d8;
-  opacity: 0.8;
+/* Card individual */
+.tarjeta-audio {
+  background: #fff7ee;
+  border: 2px solid #ffb6c9;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  text-align: left;
 }
 
-/* BOTONES */
-.btn-row {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
+/* Hover moderno */
+.tarjeta-audio:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.12);
 }
 
-.btn-rosa {
-  background: #ff69b4;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 15px;
+/* Título */
+.tarjeta-audio h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #d44f7b; /* rosa fuerte */
 }
 
-.btn-verde {
-  background: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 15px;
+/* Descripción */
+.tarjeta-audio p {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 12px;
 }
 
-.btn-rosa:hover,
-.btn-verde:hover {
-  opacity: 0.9;
+/* Audio player estético */
+.tarjeta-audio audio {
+  width: 100%;
+  margin: 10px 0;
+  border-radius: 10px;
+  outline: none;
 }
 
-.oculto {
-  display: none;
+/* Texto del autor */
+.tarjeta-audio small {
+  color: #777;
+  font-size: 12px;
+}
+
+/* Contenedor horizontal de autor + necesita */
+.meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    gap: 15px;
+    width: 100%;
+}
+
+/* Texto del autor */
+.meta-row .autor {
+    color: #666;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Etiqueta "Se necesita:" */
+.meta-row small {
+    font-size: 13px;
+    color: #333;
+}
+
+/* Valor de lo que se necesita */
+.meta-row small strong {
+    color: #d44f7b; /* rosa oscuro elegante */
+    font-weight: 700;
 }
 
 /* ======================================================
-   SECCIÓN: Mis Proyectos (grilla + cards)
+   PÁGINA SUBIR AUDIO — ESTILO SONARIA
    ====================================================== */
 
-.proyectos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
-    padding: 10px;
-}
-
-/* Card de proyecto propio */
-.card-proyecto {
-    background: #fff4e6;
+/* Contenedor principal */
+.subir-main {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #fff7ee; /* fondo pastel */
     border: 2px solid #ffb6c9;
-    border-radius: 14px;
-    padding: 18px;
-    transition: 0.15s ease;
-    cursor: pointer;
-    text-align: left;
+    border-radius: 20px;
+    padding: 30px 25px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.10);
 }
 
-.card-proyecto h3 {
-    margin-bottom: 6px;
+/* Título */
+.subir-main h1 {
+    font-size: 28px;
     color: #d44f7b;
+    margin-bottom: 25px;
+    text-shadow: 1px 1px 0 #ffe0e8;
 }
 
-.card-proyecto p {
-    color: #555;
-}
-
-/* Hover */
-.card-proyecto:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-}
-
-
-/* ======================================================
-   SECCIÓN: Proyectos donde colaboro
-   ====================================================== */
-
-.proyectos-section {
-    margin-top: 50px;
-}
-
-.lista-proyectos {
-    margin-top: 20px;
+/* Estilos de formulario */
+#form-subida {
     display: flex;
     flex-direction: column;
     gap: 18px;
 }
 
-/* Card para colaboraciones */
-.proyecto-card {
-    background: #fffdf7;
-    border: 2px solid #ffd0df;
-    border-radius: 14px;
-    padding: 20px;
-    text-align: left;
-    transition: 0.15s ease;
-    cursor: pointer;
-}
-
-.proyecto-card h3 {
-    color: #d44f7b;
-    margin-bottom: 8px;
-}
-
-.proyecto-card p {
+/* Cada label */
+#form-subida label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-weight: bold;
     color: #444;
-    margin-bottom: 6px;
+    text-align: left;
 }
 
-/* Botón dentro de la card */
-.proyecto-card .btn-rosa {
+/* Inputs y selects */
+#form-subida input[type="text"],
+#form-subida input[type="file"],
+#form-subida textarea,
+#form-subida select {
+    padding: 10px 14px;
+    border: 2px solid #ffb6c9;
+    border-radius: 12px;
+    background: #fff4e6;
+    font-size: 15px;
+    outline: none;
+    transition: 0.15s ease;
+}
+
+/* Hover / foco */
+#form-subida input:focus,
+#form-subida textarea:focus,
+#form-subida select:focus {
+    border-color: #ff69b4;
+    box-shadow: 0 0 4px rgba(255, 105, 180, 0.5);
+}
+
+/* Textarea */
+#form-subida textarea {
+    resize: vertical;
+    min-height: 70px;
+}
+
+/* ======================================================
+   BOTÓN PRINCIPAL (rosa Sonaria)
+   ====================================================== */
+
+.btn-rosa {
+    background-color: #ff69b4;
+    color: white;
+    border: 2px solid #ff69b4;
+    padding: 12px;
+    font-size: 17px;
+    font-weight: bold;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.15s ease;
     margin-top: 10px;
-    border-radius: 10px;
 }
 
-/* Hover */
-.proyecto-card:hover {
-    transform: translateY(-3px);
-    background: #fff4ea;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+.btn-rosa:hover {
+    background-color: #e0529e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }

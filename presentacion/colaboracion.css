@@ -195,3 +195,222 @@
     font-size: 0.9em;
     margin-top: auto;
   }
+
+  /* ======================================================
+ * BOTONES LOGIN Y REGISTER
+ * ====================================================== */
+
+/* Estilos base compartidos para ambos botones */
+.login-link,
+.register-link {
+  text-decoration: none;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 8px 16px;       /* Espacio interno cómodo */
+  border-radius: 20px;     /* Bordes redondeados tipo "pastilla" */
+  border: 2px solid #ff69b4; /* Mismo rosa fuerte del borde del header */
+  transition: all 0.2s ease; /* Suaviza el efecto hover */
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Estilo específico para LOGIN (Botón tipo "Ghost" o fondo blanco) */
+.login-link {
+  background-color: white;
+  color: #ff69b4; /* Texto rosa */
+  margin-right: 8px; /* Separación con el botón de registro */
+}
+
+/* Efecto Hover para Login */
+.login-link:hover {
+  background-color: #fff0f5; /* Un rosa muy pálido al pasar el mouse */
+  transform: translateY(-2px); /* Pequeño salto hacia arriba igual que los iconos */
+  color: #e0529e;
+}
+
+/* Estilo específico para REGISTER (Botón sólido para destacar) */
+.register-link {
+  background-color: #ff69b4; /* Fondo rosa fuerte */
+  color: white;              /* Texto blanco */
+}
+
+/* Efecto Hover para Register */
+.register-link:hover {
+  background-color: #e0529e; /* Oscurece un poco el rosa */
+  border-color: #e0529e;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ======================================================
+   BLOQUE: Información del proyecto
+   ====================================================== */
+
+#info-proyecto {
+  background: #fff7ee;
+  border: 2px solid #ffb6c9;
+  border-radius: 12px;
+  padding: 18px;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+#meta-proyecto {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+#meta-proyecto div {
+  background: #ffeede;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #f3c3b3;
+  font-weight: bold;
+}
+
+/* ======================================================
+   LISTA DE TAKES
+   ====================================================== */
+
+#lista-takes {
+  margin-top: 20px;
+  text-align: left;
+}
+
+#lista-takes > div {
+  background: #ffffff;
+  border: 2px solid #ffd1e0;
+  padding: 12px 15px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+
+#lista-takes > div:hover {
+  transform: scale(1.01);
+  background: #fff5fa;
+}
+
+#lista-takes small {
+  color: #555;
+}
+
+/* Botón dentro de los takes */
+.btn-accion {
+  display: inline-block;
+  background-color: #ffb6c9;
+  padding: 6px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #000;
+  border: 2px solid #ff69b4;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.btn-accion:hover {
+  background-color: #ff9eb9;
+}
+
+/* ======================================================
+   SUBIR NUEVO TAKE
+   ====================================================== */
+
+#subir-block {
+  background: #ffffff;
+  border: 2px solid #ffb6c9;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 25px;
+  text-align: left;
+}
+
+#subir-block label {
+  font-weight: bold;
+}
+
+#subir-block input[type="file"],
+#subir-block input[type="text"] {
+  margin-top: 6px;
+  padding: 6px 8px;
+  width: 100%;
+  border: 1px solid #d99;
+  border-radius: 6px;
+  background: #fffaf3;
+}
+
+#subir-block button {
+  margin-top: 12px;
+  padding: 8px 14px;
+  background: #ffb6c9;
+  border: 2px solid #ff69b4;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#subir-block button:hover {
+  background: #ff9eb9;
+}
+
+/* ======================================================
+   RESULTADO FINAL — (Vista para el dueño)
+   ====================================================== */
+
+#resultado-final-block {
+  background: #fff7ee;
+  border: 2px solid #ffa7c9;
+  padding: 16px;
+  border-radius: 12px;
+  margin-top: 25px;
+  text-align: left;
+}
+
+#publicar-final-block {
+  margin-top: 15px;
+}
+
+#publicar-final-block input[type="file"] {
+  margin-top: 6px;
+  padding: 6px;
+  border: 1px solid #d99;
+  border-radius: 6px;
+  background: #fffaf3;
+}
+
+#publicar-final-block button {
+  margin-top: 10px;
+  padding: 8px 14px;
+  background: #ff69b4;
+  border: 2px solid #d94f90;
+  color: white;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#publicar-final-block button:hover {
+  background: #e0529e;
+}
+
+/* ======================================================
+   RESPONSIVE
+   ====================================================== */
+
+@media (max-width: 700px) {
+  #meta-proyecto {
+    flex-direction: column;
+  }
+
+  #lista-takes > div {
+    padding: 12px;
+  }
+
+  #subir-block,
+  #resultado-final-block {
+    padding: 12px;
+  }
+}
