@@ -1,5 +1,4 @@
 # sonaria/app.py
-
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 from flask_session import Session
@@ -59,7 +58,6 @@ def crear_app():
     app.register_blueprint(rectificaciones_bp) 
     app.register_blueprint(admin_rectificaciones_bp)
     app.register_blueprint(admin_usuarios_bp)
-
 
     return app
 

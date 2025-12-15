@@ -46,6 +46,7 @@ async function cargarAuditoria() {
       <td>${JSON.stringify(a.detalles)}</td>
       <td>${a.fecha}</td>
       <td>${a.ip}</td>
+      <td>${a.criticidad}</td>
     `;
 
     tbody.appendChild(tr);

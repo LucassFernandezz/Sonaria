@@ -68,7 +68,8 @@ def obtener_metricas():
     registrar_evento(
         usuario_id=user["usuario_id"],
         accion="admin_ver_metricas",
-        detalles={"metricas_mostradas": len(metricas_finales)}
+        detalles={"metricas_mostradas": len(metricas_finales)}, 
+        criticidad="baja"
     )
 
     return jsonify({"ok": True, "metricas": metricas_finales})
@@ -170,7 +171,8 @@ def recalcular_metricas():
     registrar_evento(
         usuario_id=user["usuario_id"],
         accion="admin_recalcular_metricas",
-        detalles={"resultados": resultados}
+        detalles={"resultados": resultados},
+        criticidad="baja"
     )
 
     return jsonify({"ok": True, "mensaje": "Métricas recalculadas", "metricas": resultados})

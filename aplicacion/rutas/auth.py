@@ -19,13 +19,15 @@ def register():
         registrar_evento(
             usuario_id=resultado["usuario"]["id"],
             accion="registro",
-            detalles={"email": email}
+            detalles={"email": email},
+            criticidad="media"
         )  # agrego para auditoria
     else:
         registrar_evento(
             usuario_id=None,
             accion="registro_fallido",
-            detalles={"email": email, "motivo": resultado.get("error")}
+            detalles={"email": email, "motivo": resultado.get("error")},
+            criticidad="alta"
         )  # agrego para auditoria
 
     return jsonify(resultado)
@@ -44,7 +46,8 @@ def login():
         registrar_evento(
             usuario_id=None,
             accion="login_fallido",
-            detalles={"email": email}
+            detalles={"email": email},
+            criticidad ="alta"
         )  # agrego para auditoria
         return jsonify(resultado), 400
 
@@ -59,7 +62,8 @@ def login():
     registrar_evento(
         usuario_id=usuario["id"],
         accion="login_exitoso",
-        detalles={"email": usuario["email"]}
+        detalles={"email": usuario["email"]},
+        criticidad="media"
     )  # agrego para auditoria
 
     return jsonify({
@@ -79,7 +83,8 @@ def logout():
         registrar_evento(
             usuario_id=user["usuario_id"],
             accion="logout",
-            detalles={"email": user["email"]}
+            detalles={"email": user["email"]},
+            criticidad="alta"
         )  # agrego para auditoria
 
     cerrar_sesion()

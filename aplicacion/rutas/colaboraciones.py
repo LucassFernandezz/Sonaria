@@ -18,7 +18,9 @@ colaboraciones_bp = Blueprint("colaboraciones_bp", __name__, url_prefix="/colabo
 def obtener_solicitudes(proyecto_id):
 
     if not esta_autenticado():
-        registrar_evento(None, "ver_solicitudes_denegado", {"proyecto_id": proyecto_id})  # auditoría
+        registrar_evento(None, "ver_solicitudes_denegado",
+                         {"proyecto_id": proyecto_id},
+                         criticidad="alta")
         return jsonify({"ok": False, "error": "No autenticado"}), 401
 
     user = usuario_actual()
@@ -27,25 +29,23 @@ def obtener_solicitudes(proyecto_id):
     conn = obtener_conexion()
     with conn.cursor(dictionary=True) as cursor:
 
-        # Verificar dueño
         cursor.execute("SELECT usuario_id FROM proyectos_audio WHERE id = %s", (proyecto_id,))
         proyecto = cursor.fetchone()
 
         if not proyecto:
-            registrar_evento(uid, "ver_solicitudes_error", {"proyecto_id": proyecto_id, "motivo": "proyecto_no_existe"})  # auditoría
+            registrar_evento(uid, "ver_solicitudes_error",
+                             {"proyecto_id": proyecto_id, "motivo": "proyecto_no_existe"},
+                             criticidad="alta")
             return jsonify({"ok": False, "error": "Proyecto no existe"}), 404
 
         if proyecto["usuario_id"] != uid:
-            registrar_evento(uid, "ver_solicitudes_denegado", {"proyecto_id": proyecto_id})  # auditoría
+            registrar_evento(uid, "ver_solicitudes_denegado",
+                             {"proyecto_id": proyecto_id},
+                             criticidad="alta")
             return jsonify({"ok": False, "error": "No autorizado"}), 403
 
-        # Obtener solicitudes
         cursor.execute("""
-            SELECT 
-                c.id AS colaboracion_id,
-                c.estado,
-                u.email,
-                pa.nombre_artistico
+            SELECT c.id AS colaboracion_id, c.estado, u.email, pa.nombre_artistico
             FROM colaboraciones c
             JOIN usuarios u ON u.id = c.usuario_colaborador_id
             LEFT JOIN perfiles_artisticos pa ON pa.usuario_id = u.id
@@ -55,15 +55,15 @@ def obtener_solicitudes(proyecto_id):
 
         solicitudes = cursor.fetchall()
 
-        # Descifrar nombre artístico
         for s in solicitudes:
             if s["nombre_artistico"]:
                 s["nombre_artistico"] = descifrar(s["nombre_artistico"])
 
-
     conn.close()
 
-    registrar_evento(uid, "ver_solicitudes", {"proyecto_id": proyecto_id})  # auditoría
+    registrar_evento(uid, "ver_solicitudes",
+                     {"proyecto_id": proyecto_id},
+                     criticidad="baja")
 
     return jsonify({"ok": True, "solicitudes": solicitudes})
 
@@ -75,7 +75,9 @@ def obtener_solicitudes(proyecto_id):
 def aceptar_solicitud(colab_id):
 
     if not esta_autenticado():
-        registrar_evento(None, "aceptar_colab_denegado", {"colab_id": colab_id})  # auditoría
+        registrar_evento(None, "aceptar_colab_denegado",
+                         {"colab_id": colab_id},
+                         criticidad="alta")
         return jsonify({"ok": False, "error": "No autenticado"}), 401
 
     user = usuario_actual()
@@ -93,33 +95,35 @@ def aceptar_solicitud(colab_id):
         fila = cursor.fetchone()
 
         if not fila:
-            registrar_evento(uid, "aceptar_colab_error", {"colab_id": colab_id, "motivo": "no_existe"})  # auditoría
+            registrar_evento(uid, "aceptar_colab_error",
+                             {"colab_id": colab_id, "motivo": "no_existe"},
+                             criticidad="alta")
             return jsonify({"ok": False, "error": "Solicitud no encontrada"}), 404
 
         if fila["usuario_id"] != uid:
-            registrar_evento(uid, "aceptar_colab_denegado", {"colab_id": colab_id})  # auditoría
+            registrar_evento(uid, "aceptar_colab_denegado",
+                             {"colab_id": colab_id},
+                             criticidad="alta")
             return jsonify({"ok": False, "error": "No autorizado"}), 403
 
-        proyecto_id = fila["proyecto_id"]
-
-        # Aceptar esta solicitud
         cursor.execute("UPDATE colaboraciones SET estado = 'aceptada' WHERE id = %s", (colab_id,))
-
-        # Rechazar el resto
         cursor.execute("""
             UPDATE colaboraciones
             SET estado = 'rechazada'
             WHERE proyecto_id = %s AND id != %s
-        """, (proyecto_id, colab_id))
+        """, (fila["proyecto_id"], colab_id))
 
         conn.commit()
 
     conn.close()
+
     enviar_notificacion_tcp(f"Solicitud aceptada | colab_id={colab_id} | usuario={uid}")
 
-    registrar_evento(uid, "aceptar_colab", {"colab_id": colab_id})  # auditoría
+    registrar_evento(uid, "aceptar_colab",
+                     {"colab_id": colab_id},
+                     criticidad="media")
 
-    return jsonify({"ok": True, "mensaje": "Solicitud aceptada", "colaboracion_id": colab_id})
+    return jsonify({"ok": True, "mensaje": "Solicitud aceptada"})
 
 
 # ==========================================================
@@ -129,7 +133,9 @@ def aceptar_solicitud(colab_id):
 def rechazar_solicitud(colab_id):
 
     if not esta_autenticado():
-        registrar_evento(None, "rechazar_colab_denegado", {"colab_id": colab_id})  # auditoría
+        registrar_evento(None, "rechazar_colab_denegado",
+                         {"colab_id": colab_id},
+                         criticidad="alta")
         return jsonify({"ok": False, "error": "No autenticado"}), 401
 
     user = usuario_actual()
@@ -147,20 +153,27 @@ def rechazar_solicitud(colab_id):
         fila = cursor.fetchone()
 
         if not fila:
-            registrar_evento(uid, "rechazar_colab_error", {"colab_id": colab_id, "motivo": "no_existe"})  # auditoría
+            registrar_evento(uid, "rechazar_colab_error",
+                             {"colab_id": colab_id, "motivo": "no_existe"},
+                             criticidad="alta")
             return jsonify({"ok": False, "error": "Solicitud no encontrada"}), 404
 
         if fila["usuario_id"] != uid:
-            registrar_evento(uid, "rechazar_colab_denegado", {"colab_id": colab_id})  # auditoría
+            registrar_evento(uid, "rechazar_colab_denegado",
+                             {"colab_id": colab_id},
+                             criticidad="alta")
             return jsonify({"ok": False, "error": "No autorizado"}), 403
 
         cursor.execute("UPDATE colaboraciones SET estado = 'rechazada' WHERE id = %s", (colab_id,))
         conn.commit()
 
     conn.close()
+
     enviar_notificacion_tcp(f"Solicitud rechazada | colab_id={colab_id} | usuario={uid}")
 
-    registrar_evento(uid, "rechazar_colab", {"colab_id": colab_id})  # auditoría
+    registrar_evento(uid, "rechazar_colab",
+                     {"colab_id": colab_id},
+                     criticidad="media")
 
     return jsonify({"ok": True, "mensaje": "Solicitud rechazada"})
 
@@ -172,7 +185,12 @@ def rechazar_solicitud(colab_id):
 def obtener_detalle_colaboracion(colab_id):
 
     if not esta_autenticado():
-        registrar_evento(None, "detalle_colab_denegado", {"colab_id": colab_id})  # auditoría
+        registrar_evento(
+            None,
+            "detalle_colab_denegado",
+            {"colab_id": colab_id},
+            criticidad="media"
+        )
         return jsonify({"ok": False, "error": "No autenticado"}), 401
     
     user = usuario_actual()
@@ -212,13 +230,22 @@ def obtener_detalle_colaboracion(colab_id):
             if colab["colaborador_artistico"]:
                 colab["colaborador_artistico"] = descifrar(colab["colaborador_artistico"])
 
-
         if not colab:
-            registrar_evento(uid, "detalle_colab_error", {"colab_id": colab_id, "motivo": "no_existe"})  # auditoría
+            registrar_evento(
+                uid,
+                "detalle_colab_error",
+                {"colab_id": colab_id, "motivo": "no_existe"},
+                criticidad="media"
+            )
             return jsonify({"ok": False, "error": "Colaboración no encontrada"}), 404
         
         if uid not in (colab["dueno_id"], colab["colaborador_id"]):
-            registrar_evento(uid, "detalle_colab_denegado", {"colab_id": colab_id})  # auditoría
+            registrar_evento(
+                uid,
+                "detalle_colab_denegado",
+                {"colab_id": colab_id},
+                criticidad="alta"
+            )
             return jsonify({"ok": False, "error": "No autorizado"}), 403
 
         cursor.execute("""
@@ -232,7 +259,12 @@ def obtener_detalle_colaboracion(colab_id):
 
     conn.close()
 
-    registrar_evento(uid, "detalle_colab", {"colab_id": colab_id})  # auditoría
+    registrar_evento(
+        uid,
+        "detalle_colab",
+        {"colab_id": colab_id},
+        criticidad="baja"
+    )
 
     return jsonify({"ok": True, "colaboracion": colab, "takes": takes})
 
@@ -244,28 +276,37 @@ def obtener_detalle_colaboracion(colab_id):
 def subir_take(colab_id):
 
     if not esta_autenticado():
-        registrar_evento(None, "subir_take_denegado", {"colab_id": colab_id})
+        registrar_evento(
+            None,
+            "subir_take_denegado",
+            {"colab_id": colab_id},
+            criticidad="alta"
+        )
         return jsonify({"ok": False, "error": "No autenticado"}), 401
 
     user = usuario_actual()
     uid = user["usuario_id"]
 
-    # -------------------------------
-    # Validación archivo
-    # -------------------------------
     if "archivo" not in request.files:
-        registrar_evento(uid, "subir_take_error",
-                         {"colab_id": colab_id, "motivo": "archivo_no_enviado"})
+        registrar_evento(
+            uid,
+            "subir_take_error",
+            {"colab_id": colab_id, "motivo": "archivo_no_enviado"},
+            criticidad="media"
+        )
         return jsonify({"ok": False, "error": "Archivo no enviado"}), 400
 
     archivo = request.files["archivo"]
 
     if archivo.filename == "":
-        registrar_evento(uid, "subir_take_error",
-                         {"colab_id": colab_id, "motivo": "nombre_vacio"})
+        registrar_evento(
+            uid,
+            "subir_take_error",
+            {"colab_id": colab_id, "motivo": "nombre_vacio"},
+            criticidad="media"
+        )
         return jsonify({"ok": False, "error": "Nombre inválido"}), 400
 
-    # Guardado físico del archivo
     filename = secure_filename(str(int(time.time())) + "_" + archivo.filename)
     ruta = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
     archivo.save(ruta)
@@ -275,7 +316,6 @@ def subir_take(colab_id):
     conn = obtener_conexion()
     with conn.cursor(dictionary=True) as cursor:
 
-        # --- CHEQUEO 1: La colaboración existe y obtener campos necesarios ---
         cursor.execute("""
             SELECT proyecto_id, usuario_colaborador_id, estado
             FROM colaboraciones
@@ -284,27 +324,38 @@ def subir_take(colab_id):
         fila = cursor.fetchone()
 
         if not fila:
-            registrar_evento(uid, "subir_take_error",
-                             {"colab_id": colab_id, "motivo": "colab_no_existe"})
+            registrar_evento(
+                uid,
+                "subir_take_error",
+                {"colab_id": colab_id, "motivo": "colab_no_existe"},
+                criticidad="media"
+            )
             return jsonify({"ok": False, "error": "Colaboración inexistente"}), 404
 
-        # --- CHEQUEO 2: La colaboración debe estar aceptada ---
         if fila["estado"] != "aceptada":
-            registrar_evento(uid, "subir_take_error",
-                             {"colab_id": colab_id, "motivo": "colab_no_aceptada"})
+            registrar_evento(
+                uid,
+                "subir_take_error",
+                {"colab_id": colab_id, "motivo": "colab_no_aceptada"},
+                criticidad="media"
+            )
             return jsonify({"ok": False, "error": "La colaboración no está aceptada"}), 403
 
-        # Obtener dueño del proyecto
-        cursor.execute("SELECT usuario_id FROM proyectos_audio WHERE id = %s",
-                       (fila["proyecto_id"],))
+        cursor.execute(
+            "SELECT usuario_id FROM proyectos_audio WHERE id = %s",
+            (fila["proyecto_id"],)
+        )
         dueno = cursor.fetchone()["usuario_id"]
 
-        # --- CHEQUEO 3: El usuario debe ser dueño o colaborador ---
         if uid not in (dueno, fila["usuario_colaborador_id"]):
-            registrar_evento(uid, "subir_take_denegado", {"colab_id": colab_id})
+            registrar_evento(
+                uid,
+                "subir_take_denegado",
+                {"colab_id": colab_id},
+                criticidad="alta"
+            )
             return jsonify({"ok": False, "error": "No autorizado"}), 403
 
-        # Insertar take
         cursor.execute("""
             INSERT INTO takes (colaboracion_id, archivo_audio, comentarios)
             VALUES (%s, %s, %s)
@@ -314,7 +365,12 @@ def subir_take(colab_id):
 
     conn.close()
 
-    registrar_evento(uid, "subir_take", {"colab_id": colab_id, "archivo": filename})
+    registrar_evento(
+        uid,
+        "subir_take",
+        {"colab_id": colab_id, "archivo": filename},
+        criticidad="media"
+    )
     enviar_notificacion_tcp(f"Nuevo take subido | colab_id={colab_id} | usuario={uid}")
 
     return jsonify({"ok": True, "mensaje": "Take subido correctamente"})
@@ -327,7 +383,12 @@ def subir_take(colab_id):
 def obtener_takes(colab_id):
 
     if not esta_autenticado():
-        registrar_evento(None, "ver_takes_denegado", {"colab_id": colab_id})  # auditoría
+        registrar_evento(
+            None,
+            "ver_takes_denegado",
+            {"colab_id": colab_id},
+            criticidad="media"
+        )
         return jsonify({"ok": False}), 401
 
     user = usuario_actual()
@@ -345,7 +406,12 @@ def obtener_takes(colab_id):
     
     conn.close()
 
-    registrar_evento(uid, "ver_takes", {"colab_id": colab_id})  # auditoría
+    registrar_evento(
+        uid,
+        "ver_takes",
+        {"colab_id": colab_id},
+        criticidad="baja"
+    )
 
     return jsonify({"ok": True, "takes": datos})
 
@@ -357,20 +423,35 @@ def obtener_takes(colab_id):
 def publicar_resultado(colab_id):
 
     if not esta_autenticado():
-        registrar_evento(None, "publicar_resultado_denegado", {"colab_id": colab_id})  # auditoría
+        registrar_evento(
+            None,
+            "publicar_resultado_denegado",
+            {"colab_id": colab_id},
+            criticidad="alta"
+        )
         return jsonify({"ok": False, "error": "No autenticado"}), 401
 
     user = usuario_actual()
     uid = user["usuario_id"]
 
     if "archivo" not in request.files:
-        registrar_evento(uid, "publicar_resultado_error", {"colab_id": colab_id, "motivo": "archivo_no_enviado"})  # auditoría
+        registrar_evento(
+            uid,
+            "publicar_resultado_error",
+            {"colab_id": colab_id, "motivo": "archivo_no_enviado"},
+            criticidad="media"
+        )
         return jsonify({"ok": False, "error": "Archivo no enviado"}), 400
 
     archivo = request.files["archivo"]
 
     if archivo.filename == "":
-        registrar_evento(uid, "publicar_resultado_error", {"colab_id": colab_id, "motivo": "nombre_vacio"})  # auditoría
+        registrar_evento(
+            uid,
+            "publicar_resultado_error",
+            {"colab_id": colab_id, "motivo": "nombre_vacio"},
+            criticidad="media"
+        )
         return jsonify({"ok": False, "error": "Nombre inválido"}), 400
 
     filename = secure_filename(str(int(time.time())) + "_" + archivo.filename)
@@ -389,19 +470,37 @@ def publicar_resultado(colab_id):
         fila = cursor.fetchone()
 
         if not fila:
-            registrar_evento(uid, "publicar_resultado_error", {"colab_id": colab_id, "motivo": "colab_no_existe"})  # auditoría
+            registrar_evento(
+                uid,
+                "publicar_resultado_error",
+                {"colab_id": colab_id, "motivo": "colab_no_existe"},
+                criticidad="media"
+            )
             return jsonify({"ok": False, "error": "Colaboración no encontrada"}), 404
 
         if fila["usuario_id"] != uid:
-            registrar_evento(uid, "publicar_resultado_denegado", {"colab_id": colab_id})  # auditoría
+            registrar_evento(
+                uid,
+                "publicar_resultado_denegado",
+                {"colab_id": colab_id},
+                criticidad="alta"
+            )
             return jsonify({"ok": False, "error": "No autorizado"}), 403
 
-        cursor.execute("UPDATE colaboraciones SET resultado_final = %s WHERE id = %s", (filename, colab_id))
+        cursor.execute(
+            "UPDATE colaboraciones SET resultado_final = %s WHERE id = %s",
+            (filename, colab_id)
+        )
         conn.commit()
 
     conn.close()
 
-    registrar_evento(uid, "publicar_resultado", {"colab_id": colab_id, "archivo": filename})  # auditoría
+    registrar_evento(
+        uid,
+        "publicar_resultado",
+        {"colab_id": colab_id, "archivo": filename},
+        criticidad="alta"
+    )
 
     return jsonify({"ok": True, "mensaje": "Resultado final publicado"})
 
@@ -413,7 +512,12 @@ def publicar_resultado(colab_id):
 def obtener_resultado_final(colab_id):
 
     if not esta_autenticado():
-        registrar_evento(None, "ver_resultado_final_denegado", {"colab_id": colab_id})  # auditoría
+        registrar_evento(
+            None,
+            "ver_resultado_final_denegado",
+            {"colab_id": colab_id},
+            criticidad="media"
+        )
         return jsonify({"ok": False}), 401
 
     user = usuario_actual()
@@ -421,12 +525,20 @@ def obtener_resultado_final(colab_id):
 
     conn = obtener_conexion()
     with conn.cursor(dictionary=True) as cursor:
-        cursor.execute("SELECT resultado_final FROM colaboraciones WHERE id = %s", (colab_id,))
+        cursor.execute(
+            "SELECT resultado_final FROM colaboraciones WHERE id = %s",
+            (colab_id,)
+        )
         fila = cursor.fetchone()
 
     conn.close()
 
-    registrar_evento(uid, "ver_resultado_final", {"colab_id": colab_id})  # auditoría
+    registrar_evento(
+        uid,
+        "ver_resultado_final",
+        {"colab_id": colab_id},
+        criticidad="baja"
+    )
 
     if not fila or not fila["resultado_final"]:
         return jsonify({"ok": False, "resultado": None})

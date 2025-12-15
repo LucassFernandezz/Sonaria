@@ -49,7 +49,8 @@ def listar_usuarios():
     registrar_evento(
         usuario_id=user["usuario_id"],
         accion="admin_listar_usuarios",
-        detalles={"total": len(datos)}
+        detalles={"total": len(datos)},
+        criticidad="media"
     )
 
     return jsonify({"ok": True, "usuarios": datos})
@@ -85,7 +86,8 @@ def info_usuario(uid):
     registrar_evento(
         usuario_id=user["usuario_id"],
         accion="admin_ver_info_usuario",
-        detalles={"usuario_visto": uid}
+        detalles={"usuario_visto": uid},
+        criticidad="baja"
     )
 
     return jsonify({"ok": True, "usuario": datos})
@@ -123,7 +125,8 @@ def bloquear_usuario(uid):
     registrar_evento(
         usuario_id=user["usuario_id"],
         accion="admin_cambia_estado_usuario",
-        detalles={"usuario": uid, "nuevo_estado": nuevo_estado}
+        detalles={"usuario": uid, "nuevo_estado": nuevo_estado},
+        criticidad="alta"
     )
 
     return jsonify({
@@ -168,7 +171,8 @@ def cambiar_rol(uid):
     registrar_evento(
         usuario_id=user["usuario_id"],
         accion="admin_cambia_rol",
-        detalles={"usuario": uid, "nuevo_rol": nuevo_rol}
+        detalles={"usuario": uid, "nuevo_rol": nuevo_rol},
+        criticidad="alta"
     )
 
     return jsonify({"ok": True, "mensaje": "Rol actualizado"})
@@ -209,7 +213,8 @@ def resetear_password(uid):
     registrar_evento(
         usuario_id=user["usuario_id"],
         accion="admin_reset_pass",
-        detalles={"usuario": uid}
+        detalles={"usuario": uid},
+        criticidad="alta"
     )
 
     return jsonify({"ok": True, "mensaje": "Contraseña reseteada"})

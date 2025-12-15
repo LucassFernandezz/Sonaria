@@ -30,8 +30,9 @@ def crear_proyecto():
             usuario_id=None,
             accion="crear_proyecto_denegado",
             detalles={"motivo": "no_autenticado"},
-            ip=request.remote_addr
-        ) #para auditoria
+            ip=request.remote_addr,
+            criticidad="media"
+        )
         return jsonify({"ok": False, "error": "No autenticado"}), 401
 
     user = usuario_actual()
@@ -47,8 +48,9 @@ def crear_proyecto():
             usuario_id=user["usuario_id"],
             accion="crear_proyecto_fallido",
             detalles={"motivo": "sin_archivo"},
-            ip=request.remote_addr
-        ) #para auditoria
+            ip=request.remote_addr,
+            criticidad="media"
+        )
         return jsonify({"ok": False, "error": "No enviaste un archivo"}), 400
 
     if not es_extension_valida(archivo.filename):
@@ -56,8 +58,9 @@ def crear_proyecto():
             usuario_id=user["usuario_id"],
             accion="crear_proyecto_fallido",
             detalles={"motivo": "extension_invalida", "archivo": archivo.filename},
-            ip=request.remote_addr
-        ) #para auditoria
+            ip=request.remote_addr,
+            criticidad="media"
+        )
         return jsonify({"ok": False, "error": "Formato no permitido"}), 400
 
     filename = secure_filename(archivo.filename)
@@ -81,8 +84,9 @@ def crear_proyecto():
             "titulo": titulo,
             "archivo": filename
         },
-        ip=request.remote_addr
-    ) #oara auditoria
+        ip=request.remote_addr,
+        criticidad="alta"
+    )
 
     return jsonify({"ok": True, "proyecto_id": proyecto_id})
 
@@ -121,23 +125,25 @@ def obtener_audios():
 
         for a in audios:
             if a["nombre_artistico"]:
-                print("ANTES:", a["nombre_artistico"])
                 try:
-                    plano = descifrar(a["nombre_artistico"])
-                    print("DESPUÉS:", plano)
-                    a["nombre_artistico"] = plano
-                except Exception as e:
-                    print("ERROR DESCIFRANDO:", e)
+                    a["nombre_artistico"] = descifrar(a["nombre_artistico"])
+                except Exception:
                     a["nombre_artistico"] = None
-
-
-
 
         return jsonify({"ok": True, "audios": audios})
 
     except Exception as e:
         print("ERROR en /proyectos/all:", e)
+
+        registrar_evento(
+            usuario_id=None,
+            accion="error_obtener_audios",
+            detalles={"error": str(e)},
+            criticidad="alta"
+        )
+
         return jsonify({"ok": False, "error": "Error interno"}), 500
+
 
 # =====================================================
 # Obtener datos de UN proyecto por ID (proyecto.html)
@@ -152,6 +158,7 @@ def obtener_proyecto(proyecto_id):
             usuario_id=user_id,
             accion="ver_proyecto",
             detalles={"proyecto_id": proyecto_id},
+            criticidad="baja",
             ip=request.remote_addr
         ) # para auditoria
 
@@ -231,6 +238,7 @@ def solicitar_colaboracion(proyecto_id):
             usuario_id=None,
             accion="solicitar_colaboracion_denegado",
             detalles={"proyecto_id": proyecto_id, "motivo": "no_autenticado"},
+            criticidad="alta",
             ip=request.remote_addr
         ) #para auditoria
         return jsonify({"ok": False, "error": "No autenticado"}), 401
@@ -250,6 +258,7 @@ def solicitar_colaboracion(proyecto_id):
                 usuario_id=user_id,
                 accion="solicitar_colaboracion_fallido",
                 detalles={"motivo": "proyecto_no_existe", "proyecto_id": proyecto_id},
+                criticidad="alta",
                 ip=request.remote_addr
             ) # auditoria
             conn.close()
@@ -261,6 +270,7 @@ def solicitar_colaboracion(proyecto_id):
                 usuario_id=user_id,
                 accion="solicitar_colaboracion_fallido",
                 detalles={"motivo": "propio_proyecto", "proyecto_id": proyecto_id},
+                criticidad="media",
                 ip=request.remote_addr
             ) #auditoria
             conn.close()
@@ -279,6 +289,7 @@ def solicitar_colaboracion(proyecto_id):
                 usuario_id=user_id,
                 accion="solicitar_colaboracion_fallido",
                 detalles={"motivo": "ya_existente", "proyecto_id": proyecto_id},
+                criticidad="media",
                 ip=request.remote_addr
             ) #auditoria
             conn.close()
@@ -297,6 +308,7 @@ def solicitar_colaboracion(proyecto_id):
             usuario_id=user_id,
             accion="solicitar_colaboracion",
             detalles={"proyecto_id": proyecto_id},
+            criticidad="baja",
             ip=request.remote_addr
         ) #auditoria
 

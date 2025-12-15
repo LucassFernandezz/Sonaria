@@ -7,7 +7,7 @@ async function cargarAudios() {
     contenedor.innerHTML = "<p>Cargando audios...</p>";
 
     try {
-        const resp = await fetch("http://127.0.0.1:5000/proyectos/all", {
+        const resp = await fetch("http://localhost:5000/proyectos/all", {
             credentials: "include"
         });
 
@@ -38,7 +38,7 @@ async function cargarAudios() {
                 <p>${audio.descripcion || ""}</p>
 
                 <audio controls>
-                    <source src="http://127.0.0.1:5000/uploads/${audio.archivo_audio}" type="audio/mpeg">
+                    <source src="http://localhost:5000/uploads/${audio.archivo_audio}" type="audio/mpeg">
                     Tu navegador no soporta audio.
                 </audio>
 

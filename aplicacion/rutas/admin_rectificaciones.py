@@ -52,7 +52,8 @@ def listar_rectificaciones():
     registrar_evento(
         usuario_id=user["usuario_id"],
         accion="admin_listar_rectificaciones",
-        detalles={"total": len(datos)}
+        detalles={"total": len(datos)},
+        criticidad="media"
     )
 
     return jsonify({"ok": True, "rectificaciones": datos}), 200
@@ -114,7 +115,8 @@ def aprobar_rectificacion(rect_id):
     registrar_evento(
         usuario_id=user["usuario_id"],
         accion="admin_aprobar_rectificacion",
-        detalles={"rect_id": rect_id}
+        detalles={"rect_id": rect_id},
+        criticidad="alta"
     )
 
     return jsonify({"ok": True, "mensaje": "Rectificación aprobada"}), 200
@@ -156,7 +158,8 @@ def rechazar_rectificacion(rect_id):
     registrar_evento(
         usuario_id=user["usuario_id"],
         accion="admin_rechazar_rectificacion",
-        detalles={"rect_id": rect_id}
+        detalles={"rect_id": rect_id},
+        criticidad="alta"
     )
 
     return jsonify({"ok": True, "mensaje": "Rectificación rechazada"}), 200

@@ -64,7 +64,8 @@ def solicitar_rectificacion():
     registrar_evento(
         usuario_id=uid,
         accion="usuario_solicita_rectificacion",
-        detalles={"campo": campo, "valor_nuevo": valor_nuevo}
+        detalles={"campo": campo, "valor_nuevo": valor_nuevo},
+        criticidad="medio"
     )
 
     return jsonify({"ok": True, "mensaje": "Solicitud enviada"}) , 200
@@ -101,7 +102,8 @@ def rectificaciones_mias():
     registrar_evento(
         usuario_id=uid,
         accion="usuario_ve_rectificaciones",
-        detalles={"cantidad": len(datos)}
+        detalles={"cantidad": len(datos)},
+        criticidad="alta"
     )
 
     return jsonify({"ok": True, "rectificaciones": datos})

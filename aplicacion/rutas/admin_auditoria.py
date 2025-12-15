@@ -20,7 +20,8 @@ def listar_auditoria():
             detalles={
                 "motivo": "usuario no autenticado",
                 "ruta": "/admin/auditoria"
-            }
+            },
+            criticidad="alta"
         )
 
         return jsonify({"error": "No autorizado"}), 401
@@ -38,7 +39,8 @@ def listar_auditoria():
             detalles={
                 "motivo": "rol no admin",
                 "ruta": "/admin/auditoria"
-            }
+            },
+            criticidad="alta"
         )
 
         return jsonify({"error": "Solo admin"}), 403
@@ -49,19 +51,26 @@ def listar_auditoria():
     registrar_evento(
         usuario_id=user["usuario_id"],
         accion="ver_auditoria",
-        detalles={"ruta": "/admin/auditoria"}
+        detalles={"ruta": "/admin/auditoria"},
+        criticidad="media"
     )
 
     conn = obtener_conexion()
     cursor = conn.cursor(dictionary=True)
 
     cursor.execute("""
-        SELECT a.id, a.accion, a.detalles, a.fecha, a.ip,
-               u.email AS usuario_email
-        FROM auditoria a
-        LEFT JOIN usuarios u ON a.usuario_id = u.id
-        ORDER BY a.fecha DESC
-        LIMIT 200
+                SELECT 
+                   a.id, 
+                   a.accion, 
+                   a.detalles, 
+                   a.fecha, 
+                   a.ip,
+                   a.criticidad,
+                   u.email AS usuario_email
+                FROM auditoria a
+                LEFT JOIN usuarios u ON a.usuario_id = u.id
+                ORDER BY a.fecha DESC
+                LIMIT 200
     """)
 
     datos = cursor.fetchall()
