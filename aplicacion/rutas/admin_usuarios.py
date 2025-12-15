@@ -39,7 +39,9 @@ def listar_usuarios():
     cursor.execute("""
         SELECT id, email, rol, estado, fecha_registro
         FROM usuarios
+        WHERE estado != 'eliminado'
         ORDER BY id DESC
+
     """)
     datos = cursor.fetchall()
 
