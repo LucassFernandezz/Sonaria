@@ -167,6 +167,7 @@ async function cargarUsuarios() {
         <button onclick="bloquearUsuario(${u.id})">Bloquear/Activar</button>
         <button onclick="resetPass(${u.id})">Reset Pass</button>
         <button onclick="cambiarRol(${u.id})">Cambiar Rol</button>
+        <button onclick="eliminarUsuario(${u.id})">Eliminar</button>
       </td>
     `;
 
@@ -211,9 +212,27 @@ async function bloquearUsuario(id) {
 
 
 
-// === ELIMINAR (AÚN NO IMPLEMENTADO EN TU BACKEND) ===
+// === ELIMINAR ===
 async function eliminarUsuario(id) {
-  alert("⚠ Esta función aún no está implementada en tu backend.");
+
+  const confirmacion = confirm(
+    "⚠ ELIMINACIÓN PERMANENTE\n\n" +
+    "Esta acción NO se puede deshacer.\n" +
+    "El usuario perderá todo acceso.\n\n" +
+    "¿Deseas continuar?"
+  );
+
+  if (!confirmacion) return;
+
+  const res = await fetch(`/admin/usuarios/eliminar/${id}`, {
+    method: "POST"
+  });
+
+  const data = await res.json();
+
+  alert(data.mensaje || data.error || "OK");
+
+  cargarUsuarios();
 }
 
 

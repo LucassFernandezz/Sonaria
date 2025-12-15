@@ -78,6 +78,19 @@ class AuthService:
         # Si no existe el usuario → error normal
         if not usuario:
             return {"ok": False, "error": "Email o contraseña incorrectos"}
+        
+        # --------------------------------------------------------------------
+        # 🚫 SI EL USUARIO ESTÁ ELIMINADO → NO EXISTE PARA EL SISTEMA
+        # --------------------------------------------------------------------
+        if usuario["estado"] == "eliminado":
+            registrar_evento(
+                usuario_id=usuario["id"],
+                accion="login_usuario_eliminado",
+                detalles={"email": email},
+                criticidad="alta"
+            )
+            return {"ok": False, "error": "Cuenta eliminada"}
+
 
         # --------------------------------------------------------------------
         # 🚫 SI ESTÁ BLOQUEADO POR EL ADMIN → NO PERMITIR LOGIN

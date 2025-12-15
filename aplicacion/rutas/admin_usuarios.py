@@ -218,3 +218,56 @@ def resetear_password(uid):
     )
 
     return jsonify({"ok": True, "mensaje": "Contraseña reseteada"})
+
+# ======================================================
+# 6) ELIMINAR USUARIO (ELIMINACIÓN LÓGICA)
+# ======================================================
+@admin_usuarios_bp.post("/eliminar/<int:uid>")
+def eliminar_usuario(uid):
+
+    user, resp, code = require_admin()
+    if resp:
+        return resp, code
+
+    conn = obtener_conexion()
+    cursor = conn.cursor()
+
+    # Verificar que el usuario exista y no esté ya eliminado
+    cursor.execute("""
+        SELECT estado FROM usuarios WHERE id = %s
+    """, (uid,))
+    row = cursor.fetchone()
+
+    if not row:
+        cursor.close()
+        conn.close()
+        return jsonify({"ok": False, "error": "Usuario no encontrado"}), 404
+
+    if row[0] == "eliminado":
+        cursor.close()
+        conn.close()
+        return jsonify({"ok": False, "error": "Usuario ya eliminado"}), 400
+
+    # Eliminación lógica
+    cursor.execute("""
+        UPDATE usuarios
+        SET estado = 'eliminado'
+        WHERE id = %s
+    """, (uid,))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    registrar_evento(
+        usuario_id=user["usuario_id"],
+        accion="admin_elimina_usuario",
+        detalles={"usuario_eliminado": uid},
+        criticidad="alta"
+    )
+
+    return jsonify({
+        "ok": True,
+        "mensaje": "Usuario eliminado de forma permanente",
+        "forzar_logout": True
+    })
