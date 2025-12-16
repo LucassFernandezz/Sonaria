@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Sonaria - Panel Admin</title>
-  
+
   <link rel="stylesheet" href="admin_panel.css">
 </head>
 <body>
@@ -21,6 +21,7 @@
       <button class="side-btn" onclick="mostrarSeccion('metricas')">Métricas</button>
       <button class="side-btn" onclick="mostrarSeccion('rectificaciones')">Rectificaciones</button>
       <button class="side-btn" onclick="mostrarSeccion('usuarios')">Usuarios</button>
+      <button class="side-btn" onclick="mostrarSeccion('integridad')">Integridad</button>
     </aside>
 
     <!-- =========================
@@ -88,6 +89,17 @@
           </thead>
           <tbody id="tabla-usuarios"></tbody>
         </table>
+      </section>
+
+      <!-- INTEGRIDAD -->
+      <section id="seccion-integridad" class="seccion" style="display:none">
+        <h2>Integridad de la Base de Datos</h2>
+
+        <button onclick="verificarIntegridad()">
+          Verificar Dígitos Verificadores
+        </button>
+
+        <pre id="resultado-integridad"></pre>
       </section>
 
     </main>

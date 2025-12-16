@@ -20,6 +20,10 @@ function mostrarSeccion(seccion) {
     document.getElementById("seccion-usuarios").style.display = "block";
     cargarUsuarios();
   }
+  // 🔐 NUEVO
+  if (seccion === "integridad") {
+    document.getElementById("seccion-integridad").style.display = "block";
+  }
 }
 
 
@@ -276,4 +280,32 @@ async function cambiarRol(id) {
   if (data.forzar_logout) {
     localStorage.setItem("logout_forzado", Date.now());
   }
+}
+
+// ========================================
+// 5) INTEGRIDAD (DÍGITOS VERIFICADORES)
+// ========================================
+async function verificarIntegridad() {
+  const res = await fetch("/admin/usuarios/verificar_integridad");
+  const data = await res.json();
+
+  if (data.ok) {
+    alert("✅ Integridad verificada correctamente");
+    return;
+  }
+
+  // Solo entra acá si HAY error real
+  let mensaje = "⚠ ERROR DE INTEGRIDAD DETECTADO\n\n";
+
+  if (data.resultado.errores.length > 0) {
+    data.resultado.errores.forEach(e => {
+      mensaje += `Tabla: ${e.tabla} | Registro ID: ${e.registro_id}\n`;
+    });
+  }
+
+  if (!data.resultado.dvv_ok) {
+    mensaje += `\nDVV inconsistente\nEsperado: ${data.resultado.dvv_guardado}\nActual: ${data.resultado.dvv_actual}`;
+  }
+
+  alert(mensaje);
 }

@@ -3,6 +3,7 @@ from flask import Flask, send_from_directory
 from flask_cors import CORS
 from flask_session import Session
 from threading import Thread
+from aplicacion.seguridad.digito_verificador import inicializar_digitos_verificadores_usuarios
 
 # Importar blueprints
 from aplicacion.rutas.auth import auth_bp
@@ -70,6 +71,9 @@ if __name__ == "__main__":
 
     # Arrancar servidor TCP solo una vez
     if not is_running_from_reloader():
+
+        inicializar_digitos_verificadores_usuarios()
+
         hilo_tcp = Thread(target=iniciar_servidor_tcp, daemon=True)
         hilo_tcp.start()
 

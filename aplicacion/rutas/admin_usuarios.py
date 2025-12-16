@@ -4,6 +4,8 @@ from aplicacion.seguridad.sesiones import esta_autenticado, usuario_actual
 from aplicacion.seguridad.auditoria import registrar_evento
 from aplicacion.seguridad.hashing import generar_hash
 from persistencia.conexion import obtener_conexion
+from aplicacion.seguridad.digito_verificador import verificar_integridad_usuarios
+
 
 admin_usuarios_bp = Blueprint("admin_usuarios_bp", __name__, url_prefix="/admin/usuarios")
 
@@ -273,3 +275,34 @@ def eliminar_usuario(uid):
         "mensaje": "Usuario eliminado de forma permanente",
         "forzar_logout": True
     })
+
+# ======================================================
+# 6) VERIFICAR INTEGRIDAD (DVH / DVV)
+# ======================================================
+@admin_usuarios_bp.get("/verificar_integridad")
+def verificar_integridad():
+
+    user, resp, code = require_admin()
+    if resp:
+        return resp, code
+
+    resultado = verificar_integridad_usuarios()
+
+    hay_error = (
+        len(resultado["errores"]) > 0
+        or not resultado["dvv_ok"]
+    )
+
+    registrar_evento(
+        usuario_id=user["usuario_id"],
+        accion="verificar_integridad_usuarios",
+        detalles=resultado,
+        criticidad="alta"
+    )
+
+    return jsonify({
+        "ok": not hay_error,
+        "resultado": resultado,
+        "error": "Error de integridad detectado" if hay_error else None
+    })
+
